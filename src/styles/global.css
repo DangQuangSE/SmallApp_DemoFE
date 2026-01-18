@@ -61,11 +61,3 @@ button {
   /* Transitions */
   --transition: 0.2s ease;
 }
-
-/* Container utility */
-.container {
-  width: 100%;
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 var(--spacing-md);
-}
