@@ -1,15 +1,29 @@
 import { BrowserRouter } from "react-router-dom";
 import Header from "./components/layout/header";
+import Footer from "./components/layout/footer";
 import "./App.css";
 
 function App() {
   return (
     <BrowserRouter>
-      <div style={{ minHeight: "100vh", backgroundColor: "#f9fafb" }}>
+      <div
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          width: "100vw",
+        }}
+      >
         <Header />
 
         {/* Main content */}
-        <main style={{ padding: "3rem 1.5rem" }}>
+        <main
+          style={{
+            flex: 1,
+            padding: "3rem 1.5rem",
+            backgroundColor: "#f9fafb",
+          }}
+        >
           <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
             <h1
               style={{
@@ -86,6 +100,8 @@ function App() {
             </div>
           </div>
         </main>
+
+        <Footer />
       </div>
     </BrowserRouter>
   );
