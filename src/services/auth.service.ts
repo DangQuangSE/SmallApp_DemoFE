@@ -1,8 +1,10 @@
 import axios from "axios";
 import { API_CONFIG, API_ENDPOINTS } from "../constants/api";
 
+import { handleApiError } from "../utils/api-error";
+
 // Axios instance
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
   baseURL: API_CONFIG.BASE_URL,
   timeout: API_CONFIG.TIMEOUT,
   headers: {
@@ -19,134 +21,72 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
+// Handle common response errors
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const message = handleApiError(error);
+    return Promise.reject(new Error(message));
+  }
+);
+
 // Auth Service
 export const authService = {
   // Send OTP to email
   sendOTP: async (email: string) => {
-    // TODO: Replace with real API call
-    // const response = await axiosInstance.post(API_ENDPOINTS.AUTH.SEND_OTP, { email });
-    // return response.data;
-
-    // Mock response for now
-    console.log("Sending OTP to:", email);
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          success: true,
-          message: "OTP đã được gửi đến email của bạn",
-        });
-      }, 1000);
-    });
+    const response = await axiosInstance.post(API_ENDPOINTS.AUTH.SEND_OTP, { email });
+    return response.data;
   },
 
   // Verify OTP
   verifyOTP: async (email: string, otp: string) => {
-    // TODO: Replace with real API call
-    // const response = await axiosInstance.post(API_ENDPOINTS.AUTH.VERIFY_OTP, { email, otp });
-    // return response.data;
-
-    // Mock response for now
-    console.log("Verifying OTP:", { email, otp });
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        // Mock: accept OTP "123456"
-        if (otp === "123456") {
-          resolve({ success: true, token: "temp-token-12345" });
-        } else {
-          reject({ message: "OTP không chính xác" });
-        }
-      }, 1000);
-    });
+    const response = await axiosInstance.post(API_ENDPOINTS.AUTH.VERIFY_OTP, { email, otp });
+    return response.data;
   },
 
   // Complete registration with password
   register: async (email: string, password: string, otpToken: string) => {
-    // TODO: Replace with real API call
-    // const response = await axiosInstance.post(API_ENDPOINTS.AUTH.REGISTER, {
-    //   email,
-    //   password,
-    //   otpToken,
-    // });
-    // return response.data;
-
-    // Mock response for now
-    console.log("Registering user:", { email, password: "***", otpToken });
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const mockUser = {
-          id: "1",
-          email,
-          name: "User",
-          role: "buyer",
-        };
-        const mockToken = "mock-access-token-" + Date.now();
-
-        resolve({
-          success: true,
-          user: mockUser,
-          accessToken: mockToken,
-        });
-      }, 1000);
+    const response = await axiosInstance.post(API_ENDPOINTS.AUTH.REGISTER, {
+      email,
+      password,
+      otpToken,
     });
+    return response.data;
   },
 
   // Login
   login: async (email: string, password: string) => {
-    // TODO: Replace with real API call
-    // const response = await axiosInstance.post(API_ENDPOINTS.AUTH.LOGIN, { email, password });
-    // return response.data;
-
-    // Mock response for now
-    console.log("Logging in:", { email, password: "***" });
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        // Mock: accept any email with password "12345678"
-        if (password === "12345678") {
-          const mockUser = {
-            id: "1",
-            email,
-            name: "User",
-            role: "buyer",
-          };
-          const mockToken = "mock-access-token-" + Date.now();
-
-          resolve({
-            success: true,
-            user: mockUser,
-            accessToken: mockToken,
-          });
-        } else {
-          reject({ message: "Email hoặc mật khẩu không chính xác" });
-        }
-      }, 1000);
-    });
+    const response = await axiosInstance.post(API_ENDPOINTS.AUTH.LOGIN, { email, password });
+    return response.data;
   },
 
   // Google OAuth login
   googleLogin: async (googleToken: string) => {
-    // TODO: Replace with real API call
-    // const response = await axiosInstance.post(API_ENDPOINTS.AUTH.GOOGLE_LOGIN, { token: googleToken });
-    // return response.data;
+    const response = await axiosInstance.post(API_ENDPOINTS.AUTH.GOOGLE_LOGIN, { token: googleToken });
+    return response.data;
+  },
 
-    // Mock response for now
-    console.log("Google login with token:", googleToken);
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const mockUser = {
-          id: "2",
-          email: "user@gmail.com",
-          name: "Google User",
-          role: "buyer",
-        };
-        const mockToken = "mock-google-token-" + Date.now();
+  // Forgot password
+  forgotPassword: async (email: string) => {
+    const response = await axiosInstance.post(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, { email });
+    return response.data;
+  },
 
-        resolve({
-          success: true,
-          user: mockUser,
-          accessToken: mockToken,
-        });
-      }, 1000);
+  // Reset password
+  resetPassword: async (password: string, resetToken: string) => {
+    const response = await axiosInstance.post(API_ENDPOINTS.AUTH.RESET_PASSWORD, {
+      password,
+      token: resetToken,
     });
+    return response.data;
+  },
+
+  // Refresh token
+  refreshToken: async (refreshToken: string) => {
+    const response = await axiosInstance.post(API_ENDPOINTS.AUTH.REFRESH_TOKEN, {
+      token: refreshToken,
+    });
+    return response.data;
   },
 
   // Logout
@@ -155,10 +95,21 @@ export const authService = {
     localStorage.removeItem("user");
   },
 
-  // Get current user
+  // Get current user profile
+  getProfile: async () => {
+    const response = await axiosInstance.get(API_ENDPOINTS.USER.PROFILE);
+    return response.data;
+  },
+
+  // Get current user from local storage
   getCurrentUser: () => {
     const userStr = localStorage.getItem("user");
-    return userStr ? JSON.parse(userStr) : null;
+    try {
+      return userStr ? JSON.parse(userStr) : null;
+    } catch (e) {
+      localStorage.removeItem("user");
+      return null;
+    }
   },
 
   // Save user data
