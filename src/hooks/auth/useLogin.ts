@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { authService } from "../../services/auth.service";
 import { useAuth } from "../../contexts/AuthContext";
 import { ROUTES } from "../../constants/routes";
-import { LoginFormData } from "../../utils/validators";
+import { type LoginFormData } from "../../utils/validators";
 
 export const useLogin = () => {
   const navigate = useNavigate();

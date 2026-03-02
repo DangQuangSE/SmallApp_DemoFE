@@ -3,10 +3,10 @@
 
 export const API_CONFIG = {
   // Base URL - will use environment variable or fallback to localhost
-  BASE_URL: import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api",
+  BASE_URL: import.meta.env.VITE_API_BASE_URL || "https://localhost:7258/api",
 
   // Localhost for development
-  LOCAL_URL: "http://localhost:5000/api",
+  LOCAL_URL: "https://localhost:7258/api",
 
   // Production URL (to be updated when backend is deployed)
   PRODUCTION_URL: "", // TODO: Add production backend URL here

@@ -1,5 +1,9 @@
 import { useState, useEffect, type FC } from "react";
-import { bikeService, Bike, BikeFilters } from "../../services/bike.service";
+import {
+  bikeService,
+  type Bike,
+  type BikeFilters,
+} from "../../services/bike.service";
 import BikeCard from "../../components/features/bikes/BikeCard";
 import "./bike-list.css";
 
@@ -25,7 +29,7 @@ const BikeList: FC = () => {
   }, [filters]);
 
   const handleFilterChange = (key: keyof BikeFilters, value: any) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
+    setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   return (
@@ -33,7 +37,7 @@ const BikeList: FC = () => {
       <div className="bike-list-header">
         <h1>Khám phá xe đạp</h1>
         <div className="bike-list-controls">
-          <select 
+          <select
             onChange={(e) => handleFilterChange("sortBy", e.target.value)}
             className="filter-select"
           >
@@ -52,7 +56,7 @@ const BikeList: FC = () => {
         </div>
       ) : bikes.length > 0 ? (
         <div className="bike-grid">
-          {bikes.map(bike => (
+          {bikes.map((bike) => (
             <BikeCard key={bike.id} bike={bike} />
           ))}
         </div>

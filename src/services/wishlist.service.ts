@@ -1,6 +1,6 @@
 import { axiosInstance } from "./auth.service";
 import { API_ENDPOINTS } from "../constants/api";
-import { Bike } from "./bike.service";
+import { type Bike } from "./bike.service";
 
 export interface WishlistItem {
   id: string;
@@ -18,7 +18,9 @@ export const wishlistService = {
 
   // Add a bike to the wishlist
   addToWishlist: async (bikeId: string): Promise<WishlistItem> => {
-    const response = await axiosInstance.post(API_ENDPOINTS.WISHLIST.ADD, { bikeId });
+    const response = await axiosInstance.post(API_ENDPOINTS.WISHLIST.ADD, {
+      bikeId,
+    });
     return response.data;
   },
 

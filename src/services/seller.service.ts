@@ -1,7 +1,7 @@
 import { axiosInstance } from "./auth.service";
 import { API_ENDPOINTS } from "../constants/api";
-import { Bike } from "./bike.service";
-import { Order } from "./order.service";
+import { type Bike } from "./bike.service";
+import { type Order } from "./order.service";
 
 export interface SellerStatistics {
   totalRevenue: number;
@@ -31,8 +31,14 @@ export const sellerService = {
   },
 
   // Update order status (e.g., from 'pending' to 'processing' or 'shipped')
-  updateOrderStatus: async (orderId: string, status: string): Promise<Order> => {
-    const response = await axiosInstance.put(API_ENDPOINTS.ORDERS.UPDATE_STATUS(orderId), { status });
+  updateOrderStatus: async (
+    orderId: string,
+    status: string,
+  ): Promise<Order> => {
+    const response = await axiosInstance.put(
+      API_ENDPOINTS.ORDERS.UPDATE_STATUS(orderId),
+      { status },
+    );
     return response.data;
   },
 

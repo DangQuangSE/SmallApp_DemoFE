@@ -12,11 +12,13 @@ import UserDropdown from "./userDropdown";
 import logoImage from "../../../assets/images/Logo.png";
 import "./header.css";
 
+import { useAuth } from "../../../contexts/AuthContext";
+
 const Header = () => {
-  const isLoggedIn = true; // Test data
-  const cartCount = 3; // Test data
-  const wishlistCount = 5; // Test data
-  const ordersCount = 2; // Test data
+  const { isAuthenticated, user } = useAuth();
+  const cartCount = 0; // TODO: Get from CartContext
+  const wishlistCount = 0; // TODO: Get from WishlistContext
+  const ordersCount = 0; // TODO: Get from OrderContext
 
   return (
     <header className="header">
@@ -77,7 +79,7 @@ const Header = () => {
               {ordersCount > 0 && <span className="badge">{ordersCount}</span>}
             </Link>
             {/* Avatar & Dropdown */}
-            {isLoggedIn ? (
+            {isAuthenticated ? (
               <UserDropdown />
             ) : (
               <Link to={ROUTES.LOGIN} className="login-btn">

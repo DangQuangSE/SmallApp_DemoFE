@@ -6,9 +6,9 @@ import {
   faCircleCheck,
   faCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { UseFormReturn } from "react-hook-form";
+import { type UseFormReturn } from "react-hook-form";
 
-import { PasswordFormData } from "../../../../utils/validators";
+import { type PasswordFormData } from "../../../../utils/validators";
 
 interface PasswordStepProps {
   form: UseFormReturn<PasswordFormData>;
@@ -102,9 +102,7 @@ const PasswordStep: FC<PasswordStepProps> = ({
             className="password-toggle"
             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
           >
-            <FontAwesomeIcon
-              icon={showConfirmPassword ? faEyeSlash : faEye}
-            />
+            <FontAwesomeIcon icon={showConfirmPassword ? faEyeSlash : faEye} />
           </button>
         </div>
         {form.formState.errors.confirmPassword && (

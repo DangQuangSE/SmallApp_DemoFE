@@ -2,9 +2,9 @@ import { type FC } from "react";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
-import { UseFormReturn } from "react-hook-form";
+import { type UseFormReturn } from "react-hook-form";
 
-import { EmailFormData } from "../../../../utils/validators";
+import { type EmailFormData } from "../../../../utils/validators";
 import GoogleButton from "../GoogleButton";
 import { ROUTES } from "../../../../constants/routes";
 

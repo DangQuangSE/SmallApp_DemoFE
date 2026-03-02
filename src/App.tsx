@@ -6,6 +6,12 @@ import Footer from "./components/layout/footer";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import BikeList from "./pages/bikes/BikeList";
+import { 
+  CartPage, 
+  WishlistPage, 
+  MyOrdersPage, 
+  ProfilePage 
+} from "./pages/placeholders/PlaceholderPages";
 import { ROUTES } from "./constants/routes";
 import "./App.css";
 
@@ -64,7 +70,7 @@ const HomePlaceholder = () => (
         }}
       >
         <h3 style={{ color: "#C41E3A", marginBottom: "1rem" }}>
-          🛒 Giỏ hàng (3)
+          🛒 Giỏ hàng
         </h3>
         <p style={{ color: "#6B7280" }}>
           View your selected items
@@ -80,7 +86,7 @@ const HomePlaceholder = () => (
         }}
       >
         <h3 style={{ color: "#C41E3A", marginBottom: "1rem" }}>
-          ❤️ Wishlist (5)
+          ❤️ Wishlist
         </h3>
         <p style={{ color: "#6B7280" }}>
           Your favorite bikes saved for later
@@ -120,6 +126,12 @@ function App() {
               {/* Bike Routes */}
               <Route path={ROUTES.BIKES} element={<BikeList />} />
               <Route path={ROUTES.STORE} element={<BikeList />} />
+
+              {/* Functional Routes */}
+              <Route path={ROUTES.CART} element={<CartPage />} />
+              <Route path={ROUTES.WISHLIST} element={<WishlistPage />} />
+              <Route path={ROUTES.MY_ORDERS} element={<MyOrdersPage />} />
+              <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
 
               {/* Home Route */}
               <Route path={ROUTES.HOME} element={<HomePlaceholder />} />

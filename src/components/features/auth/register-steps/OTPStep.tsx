@@ -1,9 +1,9 @@
 import { type FC } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
-import { UseFormReturn } from "react-hook-form";
+import { type UseFormReturn } from "react-hook-form";
 
-import { OTPFormData } from "../../../../utils/validators";
+import { type OTPFormData } from "../../../../utils/validators";
 import OTPInput from "../OTPInput";
 
 interface OTPStepProps {

@@ -3,17 +3,19 @@ import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../constants/routes";
 import "./header.css";
 
+import { useAuth } from "../../../contexts/AuthContext";
+
 const UserDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  // TODO: Lấy từ Auth Context
-  const user = {
-    name: "Nguyễn Văn A",
-    email: "user@example.com",
-    avatar: "👤", // Hoặc URL ảnh
-    role: "buyer", // buyer, seller, inspector, admin
+  const displayUser = user || {
+    name: "Guest",
+    email: "",
+    avatar: "👤",
+    role: "buyer",
   };
 
   // Đóng dropdown khi click bên ngoài
@@ -36,8 +38,8 @@ const UserDropdown = () => {
   };
 
   const handleLogout = () => {
-    // TODO: Call logout API
-    console.log("Logout");
+    logout();
+    setIsOpen(false);
     navigate(ROUTES.LOGIN);
   };
 
@@ -49,8 +51,8 @@ const UserDropdown = () => {
         onClick={toggleDropdown}
         aria-label="User menu"
       >
-        <span className="avatar">{user.avatar}</span>
-        <span className="user-name">{user.name}</span>
+        <span className="avatar">{displayUser.avatar || "👤"}</span>
+        <span className="user-name">{displayUser.name}</span>
         <span className="dropdown-icon">{isOpen ? "▲" : "▼"}</span>
       </button>
 
@@ -59,10 +61,10 @@ const UserDropdown = () => {
         <div className="dropdown-menu">
           {/* User Info */}
           <div className="user-info">
-            <div className="avatar-large">{user.avatar}</div>
+            <div className="avatar-large">{displayUser.avatar || "👤"}</div>
             <div className="user-details">
-              <p className="user-name-large">{user.name}</p>
-              <p className="user-email">{user.email}</p>
+              <p className="user-name-large">{displayUser.name}</p>
+              <p className="user-email">{displayUser.email}</p>
             </div>
           </div>
 
@@ -88,7 +90,7 @@ const UserDropdown = () => {
           </Link>
 
           {/* Role-specific menu */}
-          {user.role === "seller" && (
+          {displayUser.role === "seller" && (
             <Link
               to="/seller/dashboard"
               className="menu-item"
