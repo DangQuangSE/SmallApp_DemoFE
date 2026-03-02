@@ -150,6 +150,18 @@
   height: 20px;
 }
 
+/* Google Login wrapper */
+.google-login-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 0.5rem 0;
+}
+
+.google-login-wrapper > div {
+  width: 100% !important;
+}
+
 /* Loading spinner */
 .spinner {
   width: 20px;

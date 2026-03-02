@@ -11,8 +11,12 @@ import { authService } from "../services/auth.service";
 interface User {
   id: string;
   email: string;
-  name: string;
+  fullName: string;
+  avatarUrl?: string;
   role: string;
+  sellerRating?: number;
+  totalRatingsCount?: number;
+  isVerifiedSeller?: boolean;
 }
 
 interface AuthContextType {
@@ -44,7 +48,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // In a real app, you would call a /me or /profile endpoint here
       // const response = await authService.getProfile();
       // setUser(response.user);
-      
+
       const currentUser = authService.getCurrentUser();
       if (currentUser) {
         setUser(currentUser);

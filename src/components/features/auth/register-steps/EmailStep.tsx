@@ -11,7 +11,7 @@ import { ROUTES } from "../../../../constants/routes";
 interface EmailStepProps {
   form: UseFormReturn<EmailFormData>;
   onSubmit: (data: EmailFormData) => Promise<void>;
-  onGoogleLogin: () => Promise<void>;
+  onGoogleLogin: (credential: string) => Promise<void>;
   isLoading: boolean;
 }
 
@@ -48,7 +48,7 @@ const EmailStep: FC<EmailStepProps> = ({
 
       <div className="divider">hoặc</div>
 
-      <GoogleButton onClick={onGoogleLogin} disabled={isLoading} />
+      <GoogleButton onSuccess={onGoogleLogin} disabled={isLoading} />
 
       <p className="text-center">
         Đã có tài khoản?{" "}

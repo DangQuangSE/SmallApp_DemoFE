@@ -3,7 +3,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faEyeSlash,
+  faCircleXmark,
+} from "@fortawesome/free-solid-svg-icons";
 
 import { loginSchema, type LoginFormData } from "../../utils/validators";
 import { useLogin } from "../../hooks/auth/useLogin";
@@ -92,7 +96,7 @@ const Login: FC = () => {
           <div className="divider">hoặc</div>
 
           {/* Google Login */}
-          <GoogleButton onClick={handleGoogleLogin} disabled={isLoading} />
+          <GoogleButton onSuccess={handleGoogleLogin} disabled={isLoading} />
 
           {/* Register Link */}
           <p className="text-center">

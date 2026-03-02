@@ -1,19 +1,22 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { AuthProvider } from "./contexts/AuthContext";
 import Header from "./components/layout/header";
 import Footer from "./components/layout/footer";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import BikeList from "./pages/bikes/BikeList";
-import { 
-  CartPage, 
-  WishlistPage, 
-  MyOrdersPage, 
-  ProfilePage 
+import {
+  CartPage,
+  WishlistPage,
+  MyOrdersPage,
+  ProfilePage,
 } from "./pages/placeholders/PlaceholderPages";
 import { ROUTES } from "./constants/routes";
 import "./App.css";
+
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 const HomePlaceholder = () => (
   <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
@@ -24,7 +27,7 @@ const HomePlaceholder = () => (
         color: "#1F2937",
       }}
     >
-      🚲 Welcome to SecondBicycle
+      Welcome to SecondBike
     </h1>
     <p
       style={{
@@ -39,8 +42,7 @@ const HomePlaceholder = () => (
     <div
       style={{
         display: "grid",
-        gridTemplateColumns:
-          "repeat(auto-fit, minmax(300px, 1fr))",
+        gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
         gap: "2rem",
         marginTop: "3rem",
       }}
@@ -53,9 +55,7 @@ const HomePlaceholder = () => (
           boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
         }}
       >
-        <h3 style={{ color: "#C41E3A", marginBottom: "1rem" }}>
-          🏠 Trang chủ
-        </h3>
+        <h3 style={{ color: "#C41E3A", marginBottom: "1rem" }}>🏠 Trang chủ</h3>
         <p style={{ color: "#6B7280" }}>
           Browse our collection of quality used bicycles
         </p>
@@ -69,12 +69,8 @@ const HomePlaceholder = () => (
           boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
         }}
       >
-        <h3 style={{ color: "#C41E3A", marginBottom: "1rem" }}>
-          🛒 Giỏ hàng
-        </h3>
-        <p style={{ color: "#6B7280" }}>
-          View your selected items
-        </p>
+        <h3 style={{ color: "#C41E3A", marginBottom: "1rem" }}>🛒 Giỏ hàng</h3>
+        <p style={{ color: "#6B7280" }}>View your selected items</p>
       </div>
 
       <div
@@ -85,12 +81,8 @@ const HomePlaceholder = () => (
           boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
         }}
       >
-        <h3 style={{ color: "#C41E3A", marginBottom: "1rem" }}>
-          ❤️ Wishlist
-        </h3>
-        <p style={{ color: "#6B7280" }}>
-          Your favorite bikes saved for later
-        </p>
+        <h3 style={{ color: "#C41E3A", marginBottom: "1rem" }}>❤️ Wishlist</h3>
+        <p style={{ color: "#6B7280" }}>Your favorite bikes saved for later</p>
       </div>
     </div>
   </div>
@@ -98,61 +90,63 @@ const HomePlaceholder = () => (
 
 function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <div
-          style={{
-            minHeight: "100vh",
-            display: "flex",
-            flexDirection: "column",
-            width: "100vw",
-          }}
-        >
-          <Header />
-
-          {/* Main content */}
-          <main
+    <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+      <BrowserRouter>
+        <AuthProvider>
+          <div
             style={{
-              flex: 1,
-              padding: "3rem 1.5rem",
-              backgroundColor: "#f9fafb",
+              minHeight: "100vh",
+              display: "flex",
+              flexDirection: "column",
+              width: "100vw",
             }}
           >
-            <Routes>
-              {/* Auth Routes */}
-              <Route path={ROUTES.LOGIN} element={<Login />} />
-              <Route path={ROUTES.REGISTER} element={<Register />} />
+            <Header />
 
-              {/* Bike Routes */}
-              <Route path={ROUTES.BIKES} element={<BikeList />} />
-              <Route path={ROUTES.STORE} element={<BikeList />} />
+            {/* Main content */}
+            <main
+              style={{
+                flex: 1,
+                padding: "3rem 1.5rem",
+                backgroundColor: "#f9fafb",
+              }}
+            >
+              <Routes>
+                {/* Auth Routes */}
+                <Route path={ROUTES.LOGIN} element={<Login />} />
+                <Route path={ROUTES.REGISTER} element={<Register />} />
 
-              {/* Functional Routes */}
-              <Route path={ROUTES.CART} element={<CartPage />} />
-              <Route path={ROUTES.WISHLIST} element={<WishlistPage />} />
-              <Route path={ROUTES.MY_ORDERS} element={<MyOrdersPage />} />
-              <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
+                {/* Bike Routes */}
+                <Route path={ROUTES.BIKES} element={<BikeList />} />
+                <Route path={ROUTES.STORE} element={<BikeList />} />
 
-              {/* Home Route */}
-              <Route path={ROUTES.HOME} element={<HomePlaceholder />} />
-            </Routes>
-          </main>
+                {/* Functional Routes */}
+                <Route path={ROUTES.CART} element={<CartPage />} />
+                <Route path={ROUTES.WISHLIST} element={<WishlistPage />} />
+                <Route path={ROUTES.MY_ORDERS} element={<MyOrdersPage />} />
+                <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
 
-          <Footer />
-        </div>
+                {/* Home Route */}
+                <Route path={ROUTES.HOME} element={<HomePlaceholder />} />
+              </Routes>
+            </main>
 
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 3000,
-            style: {
-              background: "#363636",
-              color: "#fff",
-            },
-          }}
-        />
-      </AuthProvider>
-    </BrowserRouter>
+            <Footer />
+          </div>
+
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 3000,
+              style: {
+                background: "#363636",
+                color: "#fff",
+              },
+            }}
+          />
+        </AuthProvider>
+      </BrowserRouter>
+    </GoogleOAuthProvider>
   );
 }
 

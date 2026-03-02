@@ -27,20 +27,25 @@ axiosInstance.interceptors.response.use(
   (error) => {
     const message = handleApiError(error);
     return Promise.reject(new Error(message));
-  }
+  },
 );
 
 // Auth Service
 export const authService = {
   // Send OTP to email
   sendOTP: async (email: string) => {
-    const response = await axiosInstance.post(API_ENDPOINTS.AUTH.SEND_OTP, { email });
+    const response = await axiosInstance.post(API_ENDPOINTS.AUTH.SEND_OTP, {
+      email,
+    });
     return response.data;
   },
 
   // Verify OTP
   verifyOTP: async (email: string, otp: string) => {
-    const response = await axiosInstance.post(API_ENDPOINTS.AUTH.VERIFY_OTP, { email, otp });
+    const response = await axiosInstance.post(API_ENDPOINTS.AUTH.VERIFY_OTP, {
+      email,
+      otp,
+    });
     return response.data;
   },
 
@@ -56,36 +61,50 @@ export const authService = {
 
   // Login
   login: async (email: string, password: string) => {
-    const response = await axiosInstance.post(API_ENDPOINTS.AUTH.LOGIN, { email, password });
+    const response = await axiosInstance.post(API_ENDPOINTS.AUTH.LOGIN, {
+      email,
+      password,
+    });
     return response.data;
   },
 
   // Google OAuth login
-  googleLogin: async (googleToken: string) => {
-    const response = await axiosInstance.post(API_ENDPOINTS.AUTH.GOOGLE_LOGIN, { token: googleToken });
+  googleLogin: async (idToken: string) => {
+    const response = await axiosInstance.post(API_ENDPOINTS.AUTH.GOOGLE_LOGIN, {
+      idToken,
+    });
     return response.data;
   },
 
   // Forgot password
   forgotPassword: async (email: string) => {
-    const response = await axiosInstance.post(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, { email });
+    const response = await axiosInstance.post(
+      API_ENDPOINTS.AUTH.FORGOT_PASSWORD,
+      { email },
+    );
     return response.data;
   },
 
   // Reset password
   resetPassword: async (password: string, resetToken: string) => {
-    const response = await axiosInstance.post(API_ENDPOINTS.AUTH.RESET_PASSWORD, {
-      password,
-      token: resetToken,
-    });
+    const response = await axiosInstance.post(
+      API_ENDPOINTS.AUTH.RESET_PASSWORD,
+      {
+        password,
+        token: resetToken,
+      },
+    );
     return response.data;
   },
 
   // Refresh token
   refreshToken: async (refreshToken: string) => {
-    const response = await axiosInstance.post(API_ENDPOINTS.AUTH.REFRESH_TOKEN, {
-      token: refreshToken,
-    });
+    const response = await axiosInstance.post(
+      API_ENDPOINTS.AUTH.REFRESH_TOKEN,
+      {
+        token: refreshToken,
+      },
+    );
     return response.data;
   },
 
@@ -114,7 +133,13 @@ export const authService = {
 
   // Save user data
   saveUserData: (
-    user: { id: string; email: string; name: string; role: string },
+    user: {
+      id: string;
+      email: string;
+      fullName: string;
+      role: string;
+      avatarUrl?: string;
+    },
     token: string,
   ) => {
     localStorage.setItem("user", JSON.stringify(user));

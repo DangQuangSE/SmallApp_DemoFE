@@ -12,9 +12,9 @@ const UserDropdown = () => {
   const navigate = useNavigate();
 
   const displayUser = user || {
-    name: "Guest",
+    fullName: "Guest",
     email: "",
-    avatar: "👤",
+    avatarUrl: "",
     role: "buyer",
   };
 
@@ -51,8 +51,18 @@ const UserDropdown = () => {
         onClick={toggleDropdown}
         aria-label="User menu"
       >
-        <span className="avatar">{displayUser.avatar || "👤"}</span>
-        <span className="user-name">{displayUser.name}</span>
+        <span className="avatar">
+          {displayUser.avatarUrl ? (
+            <img
+              src={displayUser.avatarUrl}
+              alt="avatar"
+              style={{ width: 28, height: 28, borderRadius: "50%" }}
+            />
+          ) : (
+            "👤"
+          )}
+        </span>
+        <span className="user-name">{displayUser.fullName}</span>
         <span className="dropdown-icon">{isOpen ? "▲" : "▼"}</span>
       </button>
 
@@ -61,9 +71,19 @@ const UserDropdown = () => {
         <div className="dropdown-menu">
           {/* User Info */}
           <div className="user-info">
-            <div className="avatar-large">{displayUser.avatar || "👤"}</div>
+            <div className="avatar-large">
+              {displayUser.avatarUrl ? (
+                <img
+                  src={displayUser.avatarUrl}
+                  alt="avatar"
+                  style={{ width: 40, height: 40, borderRadius: "50%" }}
+                />
+              ) : (
+                "👤"
+              )}
+            </div>
             <div className="user-details">
-              <p className="user-name-large">{displayUser.name}</p>
+              <p className="user-name-large">{displayUser.fullName}</p>
               <p className="user-email">{displayUser.email}</p>
             </div>
           </div>

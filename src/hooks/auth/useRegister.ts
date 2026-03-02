@@ -81,8 +81,17 @@ export const useRegister = () => {
         data.password,
         "mock-otp-token",
       );
-      const responseData = response as any;
-      registerUser(responseData.user, responseData.accessToken);
+      const responseData = response as {
+        user: {
+          id: string;
+          email: string;
+          fullName: string;
+          role: string;
+          avatarUrl?: string;
+        };
+        token: string;
+      };
+      registerUser(responseData.user, responseData.token);
       toast.success("Đăng ký thành công!");
       navigate(ROUTES.HOME);
     } catch (error: unknown) {
@@ -122,12 +131,20 @@ export const useRegister = () => {
     }
   };
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleLogin = async (credential: string) => {
     try {
-      const mockCredential = "mock-google-credential";
-      const response = await authService.googleLogin(mockCredential);
-      const responseData = response as any;
-      authGoogleLogin(responseData.user, responseData.accessToken);
+      const response = await authService.googleLogin(credential);
+      const responseData = response as {
+        user: {
+          id: string;
+          email: string;
+          fullName: string;
+          role: string;
+          avatarUrl?: string;
+        };
+        token: string;
+      };
+      authGoogleLogin(responseData.user, responseData.token);
       toast.success("Đăng nhập Google thành công!");
       navigate(ROUTES.HOME);
     } catch (error: unknown) {

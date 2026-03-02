@@ -16,8 +16,17 @@ export const useLogin = () => {
     setIsLoading(true);
     try {
       const response = await authService.login(data.email, data.password);
-      const responseData = response as any;
-      authLogin(responseData.user, responseData.accessToken);
+      const responseData = response as {
+        user: {
+          id: string;
+          email: string;
+          fullName: string;
+          role: string;
+          avatarUrl?: string;
+        };
+        token: string;
+      };
+      authLogin(responseData.user, responseData.token);
       toast.success("Đăng nhập thành công!");
       navigate(ROUTES.HOME);
     } catch (error: unknown) {
@@ -29,18 +38,29 @@ export const useLogin = () => {
     }
   };
 
-  const handleGoogleLogin = async () => {
+  const handleGoogleLogin = async (credential: string) => {
+    setIsLoading(true);
     try {
-      const mockCredential = "mock-google-credential";
-      const response = await authService.googleLogin(mockCredential);
-      const responseData = response as any;
-      authGoogleLogin(responseData.user, responseData.accessToken);
+      const response = await authService.googleLogin(credential);
+      const responseData = response as {
+        user: {
+          id: string;
+          email: string;
+          fullName: string;
+          role: string;
+          avatarUrl?: string;
+        };
+        token: string;
+      };
+      authGoogleLogin(responseData.user, responseData.token);
       toast.success("Đăng nhập Google thành công!");
       navigate(ROUTES.HOME);
     } catch (error: unknown) {
       const message =
         error instanceof Error ? error.message : "Đăng nhập Google thất bại!";
       toast.error(message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
