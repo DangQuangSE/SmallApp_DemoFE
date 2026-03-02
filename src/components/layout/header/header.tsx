@@ -49,15 +49,6 @@ const Header = () => {
             >
               <FontAwesomeIcon icon={faStore} className="icon" />
             </Link>
-            {/* Giỏ hàng */}
-            <Link
-              to={ROUTES.CART}
-              className="icon-link"
-              data-tooltip="Giỏ hàng"
-            >
-              <FontAwesomeIcon icon={faCartArrowDown} className="icon" />
-              {cartCount > 0 && <span className="badge">{cartCount}</span>}
-            </Link>
             {/* Wishlist */}
             <Link
               to={ROUTES.WISHLIST}
@@ -68,6 +59,15 @@ const Header = () => {
               {wishlistCount > 0 && (
                 <span className="badge">{wishlistCount}</span>
               )}
+            </Link>
+            {/* Giỏ hàng */}
+            <Link
+              to={ROUTES.CART}
+              className="icon-link"
+              data-tooltip="Giỏ hàng"
+            >
+              <FontAwesomeIcon icon={faCartArrowDown} className="icon" />
+              {cartCount > 0 && <span className="badge">{cartCount}</span>}
             </Link>
             {/* Đơn hàng */}
             <Link
