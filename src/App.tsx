@@ -13,6 +13,7 @@ import BikeDetailPage from "./pages/bikes/BikeDetailPage";
 import MyPostsPage from "./pages/seller/MyPostsPage";
 import CreatePostPage from "./pages/seller/CreatePostPage";
 import EditPostPage from "./pages/seller/EditPostPage";
+import MyInspectionRequestsPage from "./pages/seller/MyInspectionRequestsPage";
 import WishlistPage from "./pages/wishlist/WishlistPage";
 import CartPage from "./pages/cart/CartPage";
 import MyOrdersPage from "./pages/orders/MyOrdersPage";
@@ -22,6 +23,16 @@ import ChatRoomPage from "./pages/chat/ChatRoomPage";
 import ProfilePage from "./pages/profile/ProfilePage";
 import EditProfilePage from "./pages/profile/EditProfilePage";
 import ChangePasswordPage from "./pages/profile/ChangePasswordPage";
+import MyAbuseReportsPage from "./pages/abuse/MyAbuseReportsPage";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import PostModerationPage from "./pages/admin/PostModerationPage";
+import UserManagementPage from "./pages/admin/UserManagementPage";
+import AbuseManagementPage from "./pages/admin/AbuseManagementPage";
+import PendingInspectionsPage from "./pages/inspector/PendingInspectionsPage";
+import AssignedInspectionsPage from "./pages/inspector/AssignedInspectionsPage";
+import UploadReportPage from "./pages/inspector/UploadReportPage";
+import MyInspectionReportsPage from "./pages/inspector/MyInspectionReportsPage";
+import InspectionReportPage from "./pages/inspection/InspectionReportPage";
 import { ROUTES } from "./constants/routes";
 import "./App.css";
 
@@ -145,6 +156,34 @@ function App() {
                     element={<CreatePostPage />}
                   />
                   <Route path={ROUTES.SELLER_EDIT} element={<EditPostPage />} />
+                  <Route
+                    path={ROUTES.SELLER_INSPECTIONS}
+                    element={<MyInspectionRequestsPage />}
+                  />
+
+                  {/* Inspector Routes */}
+                  <Route
+                    path={ROUTES.INSPECTOR_PENDING}
+                    element={<PendingInspectionsPage />}
+                  />
+                  <Route
+                    path={ROUTES.INSPECTOR_ASSIGNED}
+                    element={<AssignedInspectionsPage />}
+                  />
+                  <Route
+                    path={ROUTES.INSPECTOR_UPLOAD_REPORT}
+                    element={<UploadReportPage />}
+                  />
+                  <Route
+                    path={ROUTES.INSPECTOR_MY_REPORTS}
+                    element={<MyInspectionReportsPage />}
+                  />
+
+                  {/* Inspection Report (Public) */}
+                  <Route
+                    path={ROUTES.INSPECTION_REPORT}
+                    element={<InspectionReportPage />}
+                  />
 
                   {/* Functional Routes */}
                   <Route path={ROUTES.CART} element={<CartPage />} />
@@ -161,6 +200,30 @@ function App() {
                     element={<ConversationsPage />}
                   />
                   <Route path={ROUTES.CHAT_ROOM} element={<ChatRoomPage />} />
+
+                  {/* Buyer Abuse Reports */}
+                  <Route
+                    path={ROUTES.MY_REPORTS}
+                    element={<MyAbuseReportsPage />}
+                  />
+
+                  {/* Admin Routes */}
+                  <Route
+                    path={ROUTES.ADMIN_DASHBOARD}
+                    element={<AdminDashboard />}
+                  />
+                  <Route
+                    path={ROUTES.ADMIN_MODERATION}
+                    element={<PostModerationPage />}
+                  />
+                  <Route
+                    path={ROUTES.ADMIN_USERS}
+                    element={<UserManagementPage />}
+                  />
+                  <Route
+                    path={ROUTES.ADMIN_ABUSE}
+                    element={<AbuseManagementPage />}
+                  />
 
                   <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
                   <Route

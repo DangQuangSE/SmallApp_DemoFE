@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 
 import { bikeService, type BikePostDto } from "../../services/bike.service";
 import StatusBadge from "../../components/features/bikes/StatusBadge";
+import RequestInspectionButton from "../../components/features/inspection/RequestInspectionButton";
 import { useAuth } from "../../contexts/AuthContext";
 import { ROUTES } from "../../constants/routes";
 import "../../components/features/bikes/bikes.css";
@@ -150,6 +151,13 @@ const MyPostsPage: FC = () => {
                   >
                     🗑 Xoá
                   </button>
+                  {(post.listingStatus === 1 || post.listingStatus === 2) && (
+                    <RequestInspectionButton
+                      listingId={post.listingId}
+                      hasInspection={post.hasInspection}
+                      onSuccess={() => loadMyPosts()}
+                    />
+                  )}
                 </div>
               </div>
             </div>

@@ -10,6 +10,8 @@ import { ROUTES } from "../../constants/routes";
 import BikeImageGallery from "../../components/features/bikes/BikeImageGallery";
 import StatusBadge from "../../components/features/bikes/StatusBadge";
 import SellerReputation from "../../components/features/rating/SellerReputation";
+import ReportAbuseButton from "../../components/features/abuse/ReportAbuseButton";
+import InspectionBadge from "../../components/features/inspection/InspectionBadge";
 import "../../components/features/bikes/bikes.css";
 
 const BikeDetailPage: FC = () => {
@@ -292,6 +294,14 @@ const BikeDetailPage: FC = () => {
             </button>
           )}
 
+          {/* Report abuse — hidden if user is the owner */}
+          {(!user || user.userId !== listing.sellerId) && (
+            <ReportAbuseButton
+              reportedUserId={listing.sellerId}
+              listingId={listing.listingId}
+            />
+          )}
+
           {/* Buy Now */}
           {listing.listingStatus === 1 && (
             <button
@@ -341,11 +351,9 @@ const BikeDetailPage: FC = () => {
             </p>
           )}
 
-          {/* Inspection badge */}
+          {/* Inspection badge — expandable report */}
           {listing.hasInspection && (
-            <div className="bike-inspection-badge">
-              ✅ Xe đã được kiểm định bởi SecondBike
-            </div>
+            <InspectionBadge listingId={listing.listingId} />
           )}
         </div>
       </div>

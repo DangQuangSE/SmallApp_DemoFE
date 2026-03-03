@@ -98,10 +98,26 @@ export const API_ENDPOINTS = {
 
   // Inspection endpoints
   INSPECTIONS: {
-    CREATE: "/inspections",
+    // Seller
+    CREATE_REQUEST: "/inspections/requests",
+    MY_REQUESTS: "/inspections/requests/my",
+    CANCEL_REQUEST: (requestId: number) => `/inspections/requests/${requestId}`,
+    // Inspector
+    PENDING_REQUESTS: "/inspections/requests/pending",
+    ASSIGNED_REQUESTS: "/inspections/requests/assigned",
+    ACCEPT_REQUEST: (requestId: number) =>
+      `/inspections/requests/${requestId}/accept`,
+    UPLOAD_REPORT: "/inspections/reports",
+    MY_REPORTS: "/inspections/reports/my",
+    // Public
     BY_LISTING: (listingId: number) => `/inspections/listing/${listingId}`,
-    MY_REPORTS: "/inspections/my-reports",
-    COMPLETE: (reportId: number) => `/inspections/${reportId}/complete`,
+    BY_REQUEST: (requestId: number) => `/inspections/reports/${requestId}`,
+  },
+
+  // Abuse endpoints (Buyer)
+  ABUSE: {
+    SUBMIT: "/abuse",
+    MY_REPORTS: "/abuse/my-reports",
   },
 
   // Admin endpoints
@@ -112,6 +128,9 @@ export const API_ENDPOINTS = {
     USERS: "/admin/users",
     USER_STATUS: (userId: number) => `/admin/users/${userId}/status`,
     RESOLVE_DISPUTE: "/admin/disputes/resolve",
+    ABUSE_PENDING: "/admin/abuse/pending",
+    ABUSE_REPORTS: "/admin/abuse/reports",
+    ABUSE_RESOLVE: "/admin/abuse/resolve",
   },
 };
 

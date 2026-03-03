@@ -133,8 +133,92 @@ const UserDropdown = () => {
                 <span className="menu-icon">➕</span>
                 <span>Đăng bài bán xe</span>
               </Link>
+              <Link
+                to={ROUTES.SELLER_INSPECTIONS}
+                className="menu-item"
+                onClick={() => setIsOpen(false)}
+              >
+                <span className="menu-icon">🔍</span>
+                <span>Yêu cầu kiểm định</span>
+              </Link>
             </>
           )}
+
+          {displayUser.roleName === "Inspector" && (
+            <>
+              <Link
+                to={ROUTES.INSPECTOR_PENDING}
+                className="menu-item"
+                onClick={() => setIsOpen(false)}
+              >
+                <span className="menu-icon">📋</span>
+                <span>Yêu cầu chờ nhận</span>
+              </Link>
+              <Link
+                to={ROUTES.INSPECTOR_ASSIGNED}
+                className="menu-item"
+                onClick={() => setIsOpen(false)}
+              >
+                <span className="menu-icon">📝</span>
+                <span>Yêu cầu đã nhận</span>
+              </Link>
+              <Link
+                to={ROUTES.INSPECTOR_MY_REPORTS}
+                className="menu-item"
+                onClick={() => setIsOpen(false)}
+              >
+                <span className="menu-icon">📄</span>
+                <span>Báo cáo đã upload</span>
+              </Link>
+            </>
+          )}
+
+          {displayUser.roleName === "Admin" && (
+            <>
+              <Link
+                to={ROUTES.ADMIN_DASHBOARD}
+                className="menu-item"
+                onClick={() => setIsOpen(false)}
+              >
+                <span className="menu-icon">📊</span>
+                <span>Admin Dashboard</span>
+              </Link>
+              <Link
+                to={ROUTES.ADMIN_MODERATION}
+                className="menu-item"
+                onClick={() => setIsOpen(false)}
+              >
+                <span className="menu-icon">📋</span>
+                <span>Duyệt bài đăng</span>
+              </Link>
+              <Link
+                to={ROUTES.ADMIN_USERS}
+                className="menu-item"
+                onClick={() => setIsOpen(false)}
+              >
+                <span className="menu-icon">👥</span>
+                <span>Quản lý người dùng</span>
+              </Link>
+              <Link
+                to={ROUTES.ADMIN_ABUSE}
+                className="menu-item"
+                onClick={() => setIsOpen(false)}
+              >
+                <span className="menu-icon">🚩</span>
+                <span>Báo cáo vi phạm</span>
+              </Link>
+            </>
+          )}
+
+          {/* Buyer reports link */}
+          <Link
+            to={ROUTES.MY_REPORTS}
+            className="menu-item"
+            onClick={() => setIsOpen(false)}
+          >
+            <span className="menu-icon">🚩</span>
+            <span>Báo cáo của tôi</span>
+          </Link>
 
           <div className="divider" />
 
