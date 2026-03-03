@@ -23,10 +23,17 @@ export const API_ENDPOINTS = {
     LOGIN: "/auth/login",
     GOOGLE_LOGIN: "/auth/google",
     LOGOUT: "/auth/logout",
-    PROFILE: "/auth/profile",
-    UPDATE_PROFILE: "/auth/profile",
     CONFIRM_EMAIL: "/auth/confirm-email",
     RESEND_CONFIRMATION: "/auth/resend-confirmation",
+  },
+
+  // Profile endpoints
+  PROFILE: {
+    GET: "/profile",
+    UPDATE: "/profile",
+    UPLOAD_AVATAR: "/profile/avatar",
+    REMOVE_AVATAR: "/profile/avatar",
+    CHANGE_PASSWORD: "/profile/change-password",
   },
 
   // Bike endpoints

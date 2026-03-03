@@ -41,3 +41,25 @@ export const registerSchema = z
 // Type exports
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type RegisterFormData = z.infer<typeof registerSchema>;
+
+// Update profile validation schema
+export const updateProfileSchema = z.object({
+  fullName: z.string().max(100, "Họ tên tối đa 100 ký tự").optional(),
+  phoneNumber: z.string().max(20, "Số điện thoại tối đa 20 ký tự").optional(),
+  address: z.string().max(255, "Địa chỉ tối đa 255 ký tự").optional(),
+});
+
+// Change password validation schema
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, "Vui lòng nhập mật khẩu hiện tại"),
+  newPassword: z
+    .string()
+    .min(8, "Mật khẩu phải có ít nhất 8 ký tự")
+    .regex(/[A-Z]/, "Mật khẩu phải chứa ít nhất 1 chữ hoa")
+    .regex(/[a-z]/, "Mật khẩu phải chứa ít nhất 1 chữ thường")
+    .regex(/[0-9]/, "Mật khẩu phải chứa ít nhất 1 số")
+    .regex(/[^a-zA-Z0-9]/, "Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt"),
+});
+
+export type UpdateProfileFormData = z.infer<typeof updateProfileSchema>;
+export type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;

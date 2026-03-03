@@ -15,6 +15,7 @@ interface AuthContextType {
   login: (user: UserProfileDto, token: string) => void;
   register: (user: UserProfileDto, token: string) => void;
   googleLogin: (user: UserProfileDto, token: string) => void;
+  updateUser: (user: UserProfileDto) => void;
   logout: () => void;
   checkAuth: () => Promise<void>;
 }
@@ -67,6 +68,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     authService.saveUserData(user, token);
   };
 
+  const updateUser = (updatedUser: UserProfileDto) => {
+    setUser(updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+  };
+
   const logout = () => {
     authService.logout();
     setUser(null);
@@ -79,6 +85,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     login,
     register,
     googleLogin,
+    updateUser,
     logout,
     checkAuth,
   };

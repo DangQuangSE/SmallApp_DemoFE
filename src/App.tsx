@@ -12,8 +12,10 @@ import {
   CartPage,
   WishlistPage,
   MyOrdersPage,
-  ProfilePage,
 } from "./pages/placeholders/PlaceholderPages";
+import ProfilePage from "./pages/profile/ProfilePage";
+import EditProfilePage from "./pages/profile/EditProfilePage";
+import ChangePasswordPage from "./pages/profile/ChangePasswordPage";
 import { ROUTES } from "./constants/routes";
 import "./App.css";
 
@@ -127,6 +129,14 @@ function App() {
                 <Route path={ROUTES.WISHLIST} element={<WishlistPage />} />
                 <Route path={ROUTES.MY_ORDERS} element={<MyOrdersPage />} />
                 <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
+                <Route
+                  path={ROUTES.PROFILE_EDIT}
+                  element={<EditProfilePage />}
+                />
+                <Route
+                  path={ROUTES.PROFILE_CHANGE_PASSWORD}
+                  element={<ChangePasswordPage />}
+                />
 
                 {/* Home Route */}
                 <Route path={ROUTES.HOME} element={<HomePlaceholder />} />

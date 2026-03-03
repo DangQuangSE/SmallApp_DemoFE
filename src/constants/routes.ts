@@ -30,5 +30,7 @@ export const ROUTES = {
 
   // Shared
   PROFILE: "/profile",
+  PROFILE_EDIT: "/profile/edit",
+  PROFILE_CHANGE_PASSWORD: "/profile/change-password",
   SETTINGS: "/settings",
 } as const;
