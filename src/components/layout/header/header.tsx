@@ -1,22 +1,40 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCartArrowDown,
+  faComment,
   faHeart,
   faHouse,
   faStore,
   faSuitcase,
 } from "@fortawesome/free-solid-svg-icons";
 import { ROUTES } from "../../../constants/routes";
+import { cartService } from "../../../services/cart.service";
+import { chatService } from "../../../services/chat.service";
 import UserDropdown from "./userDropdown";
 import logoImage from "../../../assets/images/Logo.png";
 import "./header.css";
 
+import { useAuth } from "../../../contexts/AuthContext";
+
 const Header = () => {
-  const isLoggedIn = true; // Test data
-  const cartCount = 3; // Test data
-  const wishlistCount = 5; // Test data
-  const ordersCount = 2; // Test data
+  const { isAuthenticated } = useAuth();
+  const [cartCount, setCartCount] = useState(0);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  // Fetch cart count & unread messages when authenticated
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    cartService
+      .getCount()
+      .then(setCartCount)
+      .catch(() => setCartCount(0));
+    chatService
+      .getUnreadCount()
+      .then(setUnreadCount)
+      .catch(() => setUnreadCount(0));
+  }, [isAuthenticated]);
 
   return (
     <header className="header">
@@ -47,6 +65,14 @@ const Header = () => {
             >
               <FontAwesomeIcon icon={faStore} className="icon" />
             </Link>
+            {/* Wishlist */}
+            <Link
+              to={ROUTES.WISHLIST}
+              className="icon-link"
+              data-tooltip="Yêu thích"
+            >
+              <FontAwesomeIcon icon={faHeart} className="icon" />
+            </Link>
             {/* Giỏ hàng */}
             <Link
               to={ROUTES.CART}
@@ -56,17 +82,6 @@ const Header = () => {
               <FontAwesomeIcon icon={faCartArrowDown} className="icon" />
               {cartCount > 0 && <span className="badge">{cartCount}</span>}
             </Link>
-            {/* Wishlist */}
-            <Link
-              to={ROUTES.WISHLIST}
-              className="icon-link"
-              data-tooltip="Yêu thích"
-            >
-              <FontAwesomeIcon icon={faHeart} className="icon" />
-              {wishlistCount > 0 && (
-                <span className="badge">{wishlistCount}</span>
-              )}
-            </Link>
             {/* Đơn hàng */}
             <Link
               to={ROUTES.MY_ORDERS}
@@ -74,10 +89,18 @@ const Header = () => {
               data-tooltip="Đơn hàng"
             >
               <FontAwesomeIcon icon={faSuitcase} className="icon" />
-              {ordersCount > 0 && <span className="badge">{ordersCount}</span>}
+            </Link>
+            {/* Tin nhắn */}
+            <Link
+              to={ROUTES.MESSAGES}
+              className="icon-link"
+              data-tooltip="Tin nhắn"
+            >
+              <FontAwesomeIcon icon={faComment} className="icon" />
+              {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
             </Link>
             {/* Avatar & Dropdown */}
-            {isLoggedIn ? (
+            {isAuthenticated ? (
               <UserDropdown />
             ) : (
               <Link to={ROUTES.LOGIN} className="login-btn">

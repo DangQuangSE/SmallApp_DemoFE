@@ -3,55 +3,74 @@ import {
   useContext,
   useState,
   useEffect,
+  useCallback,
   type ReactNode,
 } from "react";
-import { authService } from "../services/auth.service";
-
-interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: string;
-}
+import { authService, type UserProfileDto } from "../services/auth.service";
 
 interface AuthContextType {
-  user: User | null;
+  user: UserProfileDto | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (user: User, token: string) => void;
-  register: (user: User, token: string) => void;
-  googleLogin: (user: User, token: string) => void;
+  login: (user: UserProfileDto, token: string) => void;
+  register: (user: UserProfileDto, token: string) => void;
+  googleLogin: (user: UserProfileDto, token: string) => void;
+  updateUser: (user: UserProfileDto) => void;
   logout: () => void;
+  checkAuth: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserProfileDto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const checkAuth = useCallback(async () => {
+    const token = localStorage.getItem("access_token");
+    if (!token) {
+      setUser(null);
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const currentUser = authService.getCurrentUser();
+      if (currentUser) {
+        setUser(currentUser);
+      }
+    } catch (error) {
+      console.error("Auth check failed:", error);
+      authService.logout();
+      setUser(null);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   // Check if user is logged in on mount
   useEffect(() => {
-    const currentUser = authService.getCurrentUser();
-    if (currentUser) {
-      setUser(currentUser);
-    }
-    setIsLoading(false);
-  }, []);
+    checkAuth();
+  }, [checkAuth]);
 
-  const login = (user: User, token: string) => {
+  const login = (user: UserProfileDto, token: string) => {
     setUser(user);
     authService.saveUserData(user, token);
   };
 
-  const register = (user: User, token: string) => {
+  const register = (user: UserProfileDto, token: string) => {
     setUser(user);
     authService.saveUserData(user, token);
   };
 
-  const googleLogin = (user: User, token: string) => {
+  const googleLogin = (user: UserProfileDto, token: string) => {
     setUser(user);
     authService.saveUserData(user, token);
+  };
+
+  const updateUser = (updatedUser: UserProfileDto) => {
+    setUser(updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
   };
 
   const logout = () => {
@@ -66,7 +85,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     login,
     register,
     googleLogin,
+    updateUser,
     logout,
+    checkAuth,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

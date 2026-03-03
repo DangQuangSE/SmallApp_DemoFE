@@ -1,0 +1,456 @@
+/* ===== Order Status Badge ===== */
+
+.order-status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.order-status-pending {
+  background-color: #fff7ed;
+  color: #ea580c;
+}
+
+.order-status-paid {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+.order-status-shipping {
+  background-color: #f5f3ff;
+  color: #7c3aed;
+}
+
+.order-status-completed {
+  background-color: #f0fdf4;
+  color: #16a34a;
+}
+
+.order-status-cancelled {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+.order-status-refunded {
+  background-color: #f9fafb;
+  color: #6b7280;
+}
+
+/* ===== Order Card ===== */
+
+.order-card {
+  display: block;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 1rem 1.25rem;
+  text-decoration: none;
+  color: inherit;
+  transition:
+    box-shadow 0.2s,
+    transform 0.15s;
+}
+
+.order-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.order-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.order-card-id {
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.95rem;
+}
+
+.order-card-body {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.order-card-image {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: #f3f4f6;
+}
+
+.order-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.order-card-title {
+  font-weight: 500;
+  color: #1f2937;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.order-card-more {
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+.order-card-date {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  margin-top: 4px;
+}
+
+.order-card-amount {
+  font-weight: 700;
+  color: #c41e3a;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+/* ===== Order Items List ===== */
+
+.order-items h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.order-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.order-item-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.order-item-image {
+  width: 56px;
+  height: 56px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: #e5e7eb;
+}
+
+.order-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.order-item-title {
+  font-weight: 500;
+  color: #1f2937;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.order-item-seller {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.order-item-qty {
+  font-weight: 600;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.order-item-price {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.order-item-unit {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.order-item-subtotal {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* ===== Order Summary ===== */
+
+.order-summary {
+  background: white;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.order-summary h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.order-summary-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.order-summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0;
+  font-size: 0.95rem;
+  color: #4b5563;
+}
+
+.order-summary-value {
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.order-summary-paid {
+  color: #16a34a;
+}
+
+.order-summary-total {
+  border-top: 2px solid #e5e7eb;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.order-summary-remaining {
+  color: #c41e3a;
+  font-size: 1.1rem;
+}
+
+/* ===== Payment History ===== */
+
+.payment-history h3 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: #1f2937;
+}
+
+.payment-history-empty {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.payment-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.payment-history-table th {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  background: #f9fafb;
+  color: #6b7280;
+  font-weight: 600;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.payment-history-table td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid #f3f4f6;
+  color: #374151;
+}
+
+.payment-amount {
+  font-weight: 600;
+  color: #16a34a;
+}
+
+/* ===== Order Actions ===== */
+
+.order-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* ===== My Orders Page ===== */
+
+.orders-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.orders-page h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #1f2937;
+}
+
+.orders-filter-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.orders-filter-tab {
+  padding: 0.5rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 20px;
+  background: white;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.orders-filter-tab:hover {
+  border-color: #c41e3a;
+  color: #c41e3a;
+}
+
+.orders-filter-tab.active {
+  background: #c41e3a;
+  border-color: #c41e3a;
+  color: white;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ===== Order Detail Page ===== */
+
+.order-detail-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.order-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.order-detail-header h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.order-detail-meta {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.order-detail-section {
+  background: white;
+  border-radius: 12px;
+  padding: 1.25rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  margin-bottom: 1.25rem;
+}
+
+.order-detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  color: #6b7280;
+  text-decoration: none;
+  margin-bottom: 1.25rem;
+  transition: color 0.15s;
+}
+
+.order-detail-back:hover {
+  color: #c41e3a;
+}
+
+/* ===== Payment Alert (VNPay return) ===== */
+
+.payment-alert {
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  margin-bottom: 1.25rem;
+  font-weight: 500;
+}
+
+.payment-alert-success {
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+.payment-alert-error {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+/* ===== Responsive ===== */
+
+@media (max-width: 640px) {
+  .order-card-body {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .order-card-amount {
+    align-self: flex-end;
+  }
+
+  .order-item-row {
+    flex-wrap: wrap;
+  }
+
+  .order-item-price {
+    width: 100%;
+    text-align: right;
+    margin-top: 0.25rem;
+  }
+
+  .order-detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .payment-history-table {
+    font-size: 0.8rem;
+  }
+
+  .orders-filter-tabs {
+    overflow-x: auto;
+    flex-wrap: nowrap;
+  }
+}

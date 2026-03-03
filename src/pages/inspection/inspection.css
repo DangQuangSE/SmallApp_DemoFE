@@ -1,0 +1,515 @@
+/* ===== Inspection Pages Layout ===== */
+
+.inspection-page {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.inspection-page h2 {
+  font-size: 1.5rem;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+}
+
+.inspection-empty {
+  text-align: center;
+  color: #6b7280;
+  padding: 3rem 1rem;
+  font-size: 1.1rem;
+}
+
+/* ===== Inspection Card List ===== */
+
+.inspection-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.inspection-card {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.25rem;
+  transition: box-shadow 0.2s;
+}
+
+.inspection-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.inspection-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.inspection-card-title {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 1rem;
+}
+
+.inspection-card-info {
+  font-size: 0.875rem;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.inspection-card-info p {
+  margin: 0.15rem 0;
+}
+
+.inspection-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* ===== Request Status Badge ===== */
+
+.request-status {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.request-status.pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.request-status.in-progress {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.request-status.completed {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.request-status.cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* ===== Inspection Buttons ===== */
+
+.btn-inspect {
+  background: #8b5cf6;
+  color: white;
+  border: none;
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-inspect:hover:not(:disabled) {
+  background: #7c3aed;
+}
+
+.btn-inspect:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-accept {
+  background: #10b981;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-accept:hover:not(:disabled) {
+  background: #059669;
+}
+
+.btn-accept:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-cancel-request {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-cancel-request:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.btn-view-report {
+  display: inline-block;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.btn-view-report:hover {
+  background: #2563eb;
+  color: white;
+}
+
+.btn-upload-report {
+  display: inline-block;
+  background: #8b5cf6;
+  color: white;
+  border: none;
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.btn-upload-report:hover {
+  background: #7c3aed;
+  color: white;
+}
+
+/* ===== Upload Report Form ===== */
+
+.upload-report-page {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.upload-report-page h2 {
+  font-size: 1.5rem;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+}
+
+.upload-report-form {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.report-form-group {
+  margin-bottom: 1.25rem;
+}
+
+.report-form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.report-form-group textarea,
+.report-form-group input[type="url"] {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.report-form-group textarea:focus,
+.report-form-group input[type="url"]:focus {
+  outline: none;
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+/* ===== Verdict Options ===== */
+
+.verdict-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.verdict-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background 0.15s;
+}
+
+.verdict-option:hover {
+  background: #f9fafb;
+}
+
+.verdict-option input[type="radio"] {
+  accent-color: #8b5cf6;
+}
+
+.verdict-option.selected {
+  background: #f5f3ff;
+  border-color: #8b5cf6;
+}
+
+/* ===== Upload Submit Button ===== */
+
+.btn-submit-report {
+  background: #8b5cf6;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  width: 100%;
+  transition: background 0.2s;
+}
+
+.btn-submit-report:hover:not(:disabled) {
+  background: #7c3aed;
+}
+
+.btn-submit-report:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===== Inspection Badge (Public, BikeDetail) ===== */
+
+.inspection-section {
+  margin-top: 1rem;
+}
+
+.inspection-badge-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #059669;
+  transition: background 0.15s;
+}
+
+.inspection-badge-btn:hover {
+  background: #d1fae5;
+}
+
+.inspection-badge-label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.verdict-pass {
+  color: #22c55e;
+}
+
+.verdict-fail {
+  color: #ef4444;
+}
+
+.verdict-conditional {
+  color: #f59e0b;
+}
+
+.inspection-toggle {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+/* ===== Inspection Detail (Expandable) ===== */
+
+.inspection-detail {
+  margin-top: 0.5rem;
+  padding: 1rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.inspection-detail p {
+  margin: 0.25rem 0;
+}
+
+.check-item {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.check-item strong {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.check-item p {
+  color: #4b5563;
+}
+
+.btn-download-report {
+  display: inline-block;
+  margin-top: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: #3b82f6;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-download-report:hover {
+  background: #2563eb;
+  color: white;
+}
+
+/* ===== Inspection Report Public Page ===== */
+
+.report-page {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.report-page h2 {
+  font-size: 1.5rem;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+}
+
+.report-detail-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.report-detail-card h3 {
+  margin: 0 0 1rem;
+  font-size: 1.125rem;
+  color: #1f2937;
+}
+
+.report-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.report-checks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.report-check-item {
+  padding: 0.75rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.report-check-item strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #1f2937;
+}
+
+.report-check-item p {
+  margin: 0;
+  color: #4b5563;
+  font-size: 0.875rem;
+}
+
+/* ===== Verdict Badge ===== */
+
+.verdict-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.verdict-badge.pass {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.verdict-badge.fail {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.verdict-badge.conditional {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* ===== My Posts Inspection Button ===== */
+
+.badge-inspected {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: #d1fae5;
+  color: #065f46;
+}
+
+/* ===== Responsive ===== */
+
+@media (max-width: 768px) {
+  .inspection-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .verdict-options {
+    flex-direction: column;
+  }
+}
