@@ -63,3 +63,34 @@ export const changePasswordSchema = z.object({
 
 export type UpdateProfileFormData = z.infer<typeof updateProfileSchema>;
 export type ChangePasswordFormData = z.infer<typeof changePasswordSchema>;
+
+// ===== Bike Post validation schema =====
+
+export const createBikeSchema = z.object({
+  title: z
+    .string()
+    .min(1, "Tiêu đề không được để trống")
+    .max(200, "Tiêu đề tối đa 200 ký tự"),
+  description: z.string().max(5000, "Mô tả tối đa 5000 ký tự").optional(),
+  price: z
+    .string()
+    .min(1, "Giá không được để trống")
+    .refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+      message: "Giá phải là số lớn hơn 0",
+    }),
+  address: z.string().max(255, "Địa chỉ tối đa 255 ký tự").optional(),
+  brandId: z.string().optional(),
+  typeId: z.string().optional(),
+  modelName: z.string().optional(),
+  serialNumber: z.string().optional(),
+  color: z.string().optional(),
+  condition: z.string().max(50, "Tình trạng tối đa 50 ký tự").optional(),
+  frameSize: z.string().optional(),
+  frameMaterial: z.string().optional(),
+  wheelSize: z.string().optional(),
+  brakeType: z.string().optional(),
+  weight: z.string().optional(),
+  transmission: z.string().optional(),
+});
+
+export type CreateBikeFormData = z.infer<typeof createBikeSchema>;

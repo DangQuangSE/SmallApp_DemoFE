@@ -15,8 +15,9 @@ export const ROUTES = {
 
   // Seller routes
   SELLER_DASHBOARD: "/seller/dashboard",
-  SELLER_LISTINGS: "/seller/listings",
-  SELLER_CREATE: "/seller/create-listing",
+  SELLER_LISTINGS: "/seller/posts",
+  SELLER_CREATE: "/seller/posts/create",
+  SELLER_EDIT: "/seller/posts/:id/edit",
   SELLER_ORDERS: "/seller/orders",
 
   // Inspector routes

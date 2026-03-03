@@ -116,14 +116,24 @@ const UserDropdown = () => {
 
           {/* Role-specific menu */}
           {displayUser.roleName === "Seller" && (
-            <Link
-              to="/seller/dashboard"
-              className="menu-item"
-              onClick={() => setIsOpen(false)}
-            >
-              <span className="menu-icon">📊</span>
-              <span>Seller Dashboard</span>
-            </Link>
+            <>
+              <Link
+                to={ROUTES.SELLER_LISTINGS}
+                className="menu-item"
+                onClick={() => setIsOpen(false)}
+              >
+                <span className="menu-icon">📋</span>
+                <span>Bài đăng của tôi</span>
+              </Link>
+              <Link
+                to={ROUTES.SELLER_CREATE}
+                className="menu-item"
+                onClick={() => setIsOpen(false)}
+              >
+                <span className="menu-icon">➕</span>
+                <span>Đăng bài bán xe</span>
+              </Link>
+            </>
           )}
 
           <div className="divider" />

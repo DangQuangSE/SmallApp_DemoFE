@@ -8,6 +8,10 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import VerifyEmail from "./pages/auth/VerifyEmail";
 import BikeList from "./pages/bikes/BikeList";
+import BikeDetailPage from "./pages/bikes/BikeDetailPage";
+import MyPostsPage from "./pages/seller/MyPostsPage";
+import CreatePostPage from "./pages/seller/CreatePostPage";
+import EditPostPage from "./pages/seller/EditPostPage";
 import {
   CartPage,
   WishlistPage,
@@ -122,7 +126,19 @@ function App() {
 
                 {/* Bike Routes */}
                 <Route path={ROUTES.BIKES} element={<BikeList />} />
+                <Route path={ROUTES.BIKE_DETAIL} element={<BikeDetailPage />} />
                 <Route path={ROUTES.STORE} element={<BikeList />} />
+
+                {/* Seller Routes */}
+                <Route
+                  path={ROUTES.SELLER_LISTINGS}
+                  element={<MyPostsPage />}
+                />
+                <Route
+                  path={ROUTES.SELLER_CREATE}
+                  element={<CreatePostPage />}
+                />
+                <Route path={ROUTES.SELLER_EDIT} element={<EditPostPage />} />
 
                 {/* Functional Routes */}
                 <Route path={ROUTES.CART} element={<CartPage />} />
