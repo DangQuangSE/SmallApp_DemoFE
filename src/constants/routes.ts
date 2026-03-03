@@ -11,7 +11,8 @@ export const ROUTES = {
   BIKE_DETAIL: "/bikes/:id",
   CART: "/cart",
   WISHLIST: "/wishlist",
-  MY_ORDERS: "/my-orders",
+  MY_ORDERS: "/orders",
+  ORDER_DETAIL: "/orders/:id",
 
   // Seller routes
   SELLER_DASHBOARD: "/seller/dashboard",
@@ -34,4 +35,8 @@ export const ROUTES = {
   PROFILE_EDIT: "/profile/edit",
   PROFILE_CHANGE_PASSWORD: "/profile/change-password",
   SETTINGS: "/settings",
+
+  // Chat / Messaging
+  MESSAGES: "/messages",
+  CHAT_ROOM: "/messages/:otherUserId",
 } as const;

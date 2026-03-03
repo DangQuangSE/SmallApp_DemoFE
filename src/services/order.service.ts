@@ -1,62 +1,74 @@
 import { axiosInstance } from "./auth.service";
 import { API_ENDPOINTS } from "../constants/api";
+import type {
+  OrderDto,
+  OrderItemDto,
+  PaymentUrlResultDto,
+} from "../types/order.types";
 
-// ===== DTOs =====
-export interface CreateOrderDto {
-  listingId: number;
-}
-
-export interface OrderDto {
-  orderId: number;
-  orderStatus?: number; // 1=Pending, 2=Paid, 3=Shipping, 4=Completed, 5=Cancelled, 6=Refunded
-  totalAmount?: number;
-  orderDate?: string;
-  bikeTitle: string;
-  bikeImageUrl?: string;
-  buyerName: string;
-  sellerName: string;
-}
-
-export interface ProcessPaymentDto {
-  orderId: number;
-  amount: number;
-  paymentMethod?: string;
-}
+// Re-export types for convenience
+export type {
+  OrderDto,
+  OrderDetailDto,
+  OrderItemDto,
+  PaymentDto,
+  PaymentUrlResultDto,
+  CreateOrderDto,
+  CreatePaymentUrlDto,
+} from "../types/order.types";
 
 export const orderService = {
-  // Place order (auth)
-  createOrder: async (data: CreateOrderDto): Promise<OrderDto> => {
-    const response = await axiosInstance.post(
-      API_ENDPOINTS.ORDERS.CREATE,
-      data,
-    );
+  /** Place order with multiple items */
+  placeOrder: async (items: OrderItemDto[]): Promise<OrderDto> => {
+    const response = await axiosInstance.post(API_ENDPOINTS.ORDERS.CREATE, {
+      items,
+    });
     return response.data;
   },
 
-  // Get order detail (auth)
+  /** Buy single item (convenience helper) */
+  buyNow: async (
+    listingId: number,
+    quantity: number = 1,
+  ): Promise<OrderDto> => {
+    return orderService.placeOrder([{ listingId, quantity }]);
+  },
+
+  /** Get order detail */
   getOrderDetail: async (id: number): Promise<OrderDto> => {
     const response = await axiosInstance.get(API_ENDPOINTS.ORDERS.DETAIL(id));
     return response.data;
   },
 
-  // Get my purchases (auth)
+  /** Get my purchases (sorted newest first) */
   getMyPurchases: async (): Promise<OrderDto[]> => {
     const response = await axiosInstance.get(API_ENDPOINTS.ORDERS.MY_PURCHASES);
     return response.data;
   },
 
-  // Cancel order (auth)
+  /** Cancel order (only Pending or Paid status) */
   cancelOrder: async (id: number): Promise<void> => {
     await axiosInstance.post(API_ENDPOINTS.ORDERS.CANCEL(id));
   },
 
-  // Confirm delivery (auth)
+  /** Confirm delivery (only Shipping status) */
   confirmDelivery: async (id: number): Promise<void> => {
     await axiosInstance.post(API_ENDPOINTS.ORDERS.CONFIRM_DELIVERY(id));
   },
 
-  // Process payment (auth)
-  processPayment: async (data: ProcessPaymentDto): Promise<void> => {
-    await axiosInstance.post(API_ENDPOINTS.ORDERS.PAYMENT, data);
+  /**
+   * Create VNPay payment URL.
+   * IMPORTANT: FE must use window.location.href (NOT navigate())
+   * because this redirects to an external VNPay domain.
+   */
+  createPaymentUrl: async (
+    orderId: number,
+    paymentType: "deposit" | "full",
+  ): Promise<PaymentUrlResultDto> => {
+    const response = await axiosInstance.post(
+      API_ENDPOINTS.ORDERS.CREATE_PAYMENT_URL,
+      { orderId, paymentType },
+    );
+    return response.data;
   },
 };

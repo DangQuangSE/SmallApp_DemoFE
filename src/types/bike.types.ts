@@ -14,6 +14,7 @@ export interface BikePostDto {
   title: string;
   description?: string;
   price: number;
+  quantity: number;
   listingStatus?: number; // 0=Hidden, 1=Active, 2=Pending, 3=Sold, 4=Rejected
   address?: string;
   postedDate?: string;
@@ -45,6 +46,8 @@ export interface BikeFilterDto {
   condition?: string;
   minPrice?: number;
   maxPrice?: number;
+  frameSize?: string;
+  wheelSize?: string;
   address?: string;
   sortBy?: "newest" | "oldest" | "price_asc" | "price_desc";
   page?: number;

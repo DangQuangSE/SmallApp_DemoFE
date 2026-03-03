@@ -9,6 +9,8 @@ interface BikeFilterProps {
 }
 
 const CONDITIONS = ["New", "Like New", "Used"];
+const FRAME_SIZES = ["XS", "S", "M", "L", "XL"];
+const WHEEL_SIZES = ["26", "27.5", "29", "700c"];
 const SORT_OPTIONS = [
   { value: "newest", label: "Mới nhất" },
   { value: "oldest", label: "Cũ nhất" },
@@ -18,9 +20,11 @@ const SORT_OPTIONS = [
 
 const BikeFilter: FC<BikeFilterProps> = ({ filter, onFilterChange }) => {
   const [brands, setBrands] = useState<string[]>([]);
+  const [types, setTypes] = useState<string[]>([]);
 
   useEffect(() => {
     bikeService.getBrands().then(setBrands).catch(console.error);
+    bikeService.getTypes().then(setTypes).catch(console.error);
   }, []);
 
   const handleChange = (key: keyof BikeFilterDto, value: string | number) => {
@@ -71,6 +75,24 @@ const BikeFilter: FC<BikeFilterProps> = ({ filter, onFilterChange }) => {
           {brands.map((brand, i) => (
             <option key={brand} value={i + 1}>
               {brand}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Type */}
+      <div className="filter-group">
+        <label>Loại xe</label>
+        <select
+          value={filter.typeId || ""}
+          onChange={(e) => handleChange("typeId", Number(e.target.value) || "")}
+          className="filter-select"
+          title="Chọn loại xe"
+        >
+          <option value="">Tất cả</option>
+          {types.map((type, i) => (
+            <option key={type} value={i + 1}>
+              {type}
             </option>
           ))}
         </select>
@@ -132,6 +154,42 @@ const BikeFilter: FC<BikeFilterProps> = ({ filter, onFilterChange }) => {
           onChange={(e) => handleChange("address", e.target.value)}
           className="filter-input"
         />
+      </div>
+
+      {/* Frame Size */}
+      <div className="filter-group">
+        <label>Kích cỡ khung</label>
+        <select
+          value={filter.frameSize || ""}
+          onChange={(e) => handleChange("frameSize", e.target.value)}
+          className="filter-select"
+          title="Chọn kích cỡ khung"
+        >
+          <option value="">Tất cả</option>
+          {FRAME_SIZES.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Wheel Size */}
+      <div className="filter-group">
+        <label>Cỡ bánh xe</label>
+        <select
+          value={filter.wheelSize || ""}
+          onChange={(e) => handleChange("wheelSize", e.target.value)}
+          className="filter-select"
+          title="Chọn cỡ bánh xe"
+        >
+          <option value="">Tất cả</option>
+          {WHEEL_SIZES.map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
       </div>
 
       {/* Sort */}

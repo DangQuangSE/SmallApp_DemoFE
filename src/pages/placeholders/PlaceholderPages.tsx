@@ -48,6 +48,3 @@ export const CartPage = () => (
 export const WishlistPage = () => (
   <PlaceholderPage title="Danh sách yêu thích" icon="❤️" />
 );
-export const MyOrdersPage = () => (
-  <PlaceholderPage title="Đơn hàng của tôi" icon="📦" />
-);

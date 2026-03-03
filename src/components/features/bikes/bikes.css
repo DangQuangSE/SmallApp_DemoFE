@@ -755,3 +755,131 @@ select.form-control {
     grid-template-columns: 1fr;
   }
 }
+
+/* ===== Buy Now Button ===== */
+.btn-buy-now {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  background-color: #c41e3a;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
+  margin-top: 1.5rem;
+}
+
+.btn-buy-now:hover:not(:disabled) {
+  background-color: #a3182f;
+  transform: translateY(-1px);
+}
+
+.btn-buy-now:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===== Wishlist & Cart Buttons ===== */
+.bike-detail-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.btn-wishlist,
+.btn-cart-toggle {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s;
+}
+
+.btn-wishlist {
+  background: #fff;
+  color: #6b7280;
+  border: 2px solid #e5e7eb;
+}
+
+.btn-wishlist:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.btn-wishlist.active {
+  background: #fef2f2;
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+.btn-cart-toggle {
+  background: #fff;
+  color: #6b7280;
+  border: 2px solid #e5e7eb;
+}
+
+.btn-cart-toggle:hover:not(:disabled) {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+.btn-cart-toggle.in-cart {
+  background: #eff6ff;
+  color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.btn-cart-toggle:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===== Quantity & Inspection ===== */
+.bike-detail-quantity {
+  margin-top: 0.75rem;
+  font-size: 0.95rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.bike-inspection-badge {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background: #ecfdf5;
+  color: #059669;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.btn-chat-seller {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: #1d4ed8;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.btn-chat-seller:hover {
+  opacity: 0.9;
+}
+
+@media (max-width: 480px) {
+  .bike-detail-actions {
+    flex-direction: column;
+  }
+}

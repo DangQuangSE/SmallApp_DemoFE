@@ -46,6 +46,7 @@ export const API_ENDPOINTS = {
     VISIBILITY: (id: number) => `/bikes/${id}/visibility`,
     MY_POSTS: "/bikes/my-posts",
     BRANDS: "/bikes/brands",
+    TYPES: "/bikes/types",
   },
 
   // Wishlist endpoints
@@ -56,6 +57,16 @@ export const API_ENDPOINTS = {
     CHECK: (listingId: number) => `/wishlist/${listingId}/check`,
   },
 
+  // Cart endpoints
+  CART: {
+    GET: "/cart",
+    ADD: (listingId: number) => `/cart/${listingId}`,
+    REMOVE: (listingId: number) => `/cart/${listingId}`,
+    CLEAR: "/cart",
+    CHECK: (listingId: number) => `/cart/${listingId}/check`,
+    COUNT: "/cart/count",
+  },
+
   // Order endpoints
   ORDERS: {
     CREATE: "/orders",
@@ -63,7 +74,7 @@ export const API_ENDPOINTS = {
     MY_PURCHASES: "/orders/my-purchases",
     CANCEL: (id: number) => `/orders/${id}/cancel`,
     CONFIRM_DELIVERY: (id: number) => `/orders/${id}/confirm-delivery`,
-    PAYMENT: "/orders/payment",
+    CREATE_PAYMENT_URL: "/orders/create-payment-url",
   },
 
   // Message endpoints
@@ -81,6 +92,8 @@ export const API_ENDPOINTS = {
   RATINGS: {
     CREATE: "/ratings",
     BY_SELLER: (sellerId: number) => `/ratings/seller/${sellerId}`,
+    SELLER_STATS: (sellerId: number) => `/ratings/seller/${sellerId}/stats`,
+    CHECK: (orderId: number) => `/ratings/order/${orderId}/check`,
   },
 
   // Inspection endpoints

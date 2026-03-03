@@ -117,6 +117,9 @@ const MyPostsPage: FC = () => {
                 src={getThumbnail(post)}
                 alt={post.title}
                 className="my-post-image"
+                onError={(e) => {
+                  e.currentTarget.src = "/assets/images/placeholder-bike.png";
+                }}
               />
               <div className="my-post-info">
                 <div className="my-post-title">{post.title}</div>

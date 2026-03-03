@@ -1,13 +1,17 @@
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCartArrowDown,
+  faComment,
   faHeart,
   faHouse,
   faStore,
   faSuitcase,
 } from "@fortawesome/free-solid-svg-icons";
 import { ROUTES } from "../../../constants/routes";
+import { cartService } from "../../../services/cart.service";
+import { chatService } from "../../../services/chat.service";
 import UserDropdown from "./userDropdown";
 import logoImage from "../../../assets/images/Logo.png";
 import "./header.css";
@@ -15,10 +19,22 @@ import "./header.css";
 import { useAuth } from "../../../contexts/AuthContext";
 
 const Header = () => {
-  const { isAuthenticated, user } = useAuth();
-  const cartCount = 0; // TODO: Get from CartContext
-  const wishlistCount = 0; // TODO: Get from WishlistContext
-  const ordersCount = 0; // TODO: Get from OrderContext
+  const { isAuthenticated } = useAuth();
+  const [cartCount, setCartCount] = useState(0);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  // Fetch cart count & unread messages when authenticated
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    cartService
+      .getCount()
+      .then(setCartCount)
+      .catch(() => setCartCount(0));
+    chatService
+      .getUnreadCount()
+      .then(setUnreadCount)
+      .catch(() => setUnreadCount(0));
+  }, [isAuthenticated]);
 
   return (
     <header className="header">
@@ -56,9 +72,6 @@ const Header = () => {
               data-tooltip="Yêu thích"
             >
               <FontAwesomeIcon icon={faHeart} className="icon" />
-              {wishlistCount > 0 && (
-                <span className="badge">{wishlistCount}</span>
-              )}
             </Link>
             {/* Giỏ hàng */}
             <Link
@@ -76,7 +89,15 @@ const Header = () => {
               data-tooltip="Đơn hàng"
             >
               <FontAwesomeIcon icon={faSuitcase} className="icon" />
-              {ordersCount > 0 && <span className="badge">{ordersCount}</span>}
+            </Link>
+            {/* Tin nhắn */}
+            <Link
+              to={ROUTES.MESSAGES}
+              className="icon-link"
+              data-tooltip="Tin nhắn"
+            >
+              <FontAwesomeIcon icon={faComment} className="icon" />
+              {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
             </Link>
             {/* Avatar & Dropdown */}
             {isAuthenticated ? (

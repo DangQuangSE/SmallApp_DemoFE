@@ -6,6 +6,8 @@ interface BikeImageGalleryProps {
   images: BikeImageDto[];
 }
 
+const PLACEHOLDER = "/assets/images/placeholder-bike.png";
+
 const BikeImageGallery: FC<BikeImageGalleryProps> = ({ images }) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
@@ -17,11 +19,7 @@ const BikeImageGallery: FC<BikeImageGalleryProps> = ({ images }) => {
   if (sorted.length === 0) {
     return (
       <div className="gallery">
-        <img
-          src="/assets/images/placeholder-bike.png"
-          alt="No image"
-          className="gallery-main-image"
-        />
+        <img src={PLACEHOLDER} alt="No image" className="gallery-main-image" />
       </div>
     );
   }
@@ -33,6 +31,9 @@ const BikeImageGallery: FC<BikeImageGalleryProps> = ({ images }) => {
           src={sorted[activeIndex]?.mediaUrl}
           alt="Bike"
           className="gallery-main-image"
+          onError={(e) => {
+            e.currentTarget.src = PLACEHOLDER;
+          }}
         />
       </div>
 
@@ -45,6 +46,9 @@ const BikeImageGallery: FC<BikeImageGalleryProps> = ({ images }) => {
               alt={`Thumbnail ${i + 1}`}
               className={`gallery-thumb ${i === activeIndex ? "active" : ""}`}
               onClick={() => setActiveIndex(i)}
+              onError={(e) => {
+                e.currentTarget.src = PLACEHOLDER;
+              }}
             />
           ))}
         </div>

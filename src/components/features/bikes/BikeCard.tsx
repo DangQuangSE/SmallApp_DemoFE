@@ -14,11 +14,13 @@ const BikeCard: FC<BikeCardProps> = ({ bike }) => {
     currency: "VND",
   }).format(bike.price);
 
+  const PLACEHOLDER = "/assets/images/placeholder-bike.png";
+
   // Get thumbnail image URL
   const thumbnailImage =
     bike.images?.find((img) => img.isThumbnail)?.mediaUrl ||
     bike.images?.[0]?.mediaUrl ||
-    "/assets/images/placeholder-bike.png";
+    PLACEHOLDER;
 
   const bikeDetailPath = ROUTES.BIKE_DETAIL.replace(
     ":id",
@@ -32,6 +34,9 @@ const BikeCard: FC<BikeCardProps> = ({ bike }) => {
           src={thumbnailImage}
           alt={bike.title}
           className="bike-card-image"
+          onError={(e) => {
+            e.currentTarget.src = PLACEHOLDER;
+          }}
         />
         {bike.condition === "New" && (
           <span className="bike-badge badge-new">Mới</span>

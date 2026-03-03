@@ -95,6 +95,12 @@ export const bikeService = {
     return response.data;
   },
 
+  /** Get types list (public) */
+  getTypes: async (): Promise<string[]> => {
+    const response = await axiosInstance.get(API_ENDPOINTS.BIKES.TYPES);
+    return response.data;
+  },
+
   /** Create bike listing (auth) — uses FormData, NOT JSON */
   createBike: async (values: CreateBikeFormValues): Promise<BikePostDto> => {
     const formData = buildCreateFormData(values);
