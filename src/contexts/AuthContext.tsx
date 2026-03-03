@@ -6,26 +6,15 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
-import { authService } from "../services/auth.service";
-
-interface User {
-  id: string;
-  email: string;
-  fullName: string;
-  avatarUrl?: string;
-  role: string;
-  sellerRating?: number;
-  totalRatingsCount?: number;
-  isVerifiedSeller?: boolean;
-}
+import { authService, type UserProfileDto } from "../services/auth.service";
 
 interface AuthContextType {
-  user: User | null;
+  user: UserProfileDto | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (user: User, token: string) => void;
-  register: (user: User, token: string) => void;
-  googleLogin: (user: User, token: string) => void;
+  login: (user: UserProfileDto, token: string) => void;
+  register: (user: UserProfileDto, token: string) => void;
+  googleLogin: (user: UserProfileDto, token: string) => void;
   logout: () => void;
   checkAuth: () => Promise<void>;
 }
@@ -33,7 +22,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserProfileDto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const checkAuth = useCallback(async () => {
@@ -45,10 +34,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
 
     try {
-      // In a real app, you would call a /me or /profile endpoint here
-      // const response = await authService.getProfile();
-      // setUser(response.user);
-
       const currentUser = authService.getCurrentUser();
       if (currentUser) {
         setUser(currentUser);
@@ -67,17 +52,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     checkAuth();
   }, [checkAuth]);
 
-  const login = (user: User, token: string) => {
+  const login = (user: UserProfileDto, token: string) => {
     setUser(user);
     authService.saveUserData(user, token);
   };
 
-  const register = (user: User, token: string) => {
+  const register = (user: UserProfileDto, token: string) => {
     setUser(user);
     authService.saveUserData(user, token);
   };
 
-  const googleLogin = (user: User, token: string) => {
+  const googleLogin = (user: UserProfileDto, token: string) => {
     setUser(user);
     authService.saveUserData(user, token);
   };

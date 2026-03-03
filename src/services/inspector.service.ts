@@ -1,68 +1,62 @@
 import { axiosInstance } from "./auth.service";
 import { API_ENDPOINTS } from "../constants/api";
-import { type Bike } from "./bike.service";
 
-export interface InspectionRequest {
-  id: string;
-  bikeId: string;
-  bike: Bike;
-  sellerId: string;
-  status: "pending" | "in_progress" | "approved" | "rejected";
-  requestedAt: string;
-  scheduledAt?: string;
-  inspectorId?: string;
-  report?: InspectionReport;
+// ===== DTOs =====
+export interface CreateInspectionDto {
+  listingId: number;
+  frameCheck?: string;
+  brakeCheck?: string;
+  transmissionCheck?: string;
+  inspectorNote?: string;
+  finalVerdict?: number; // byte
+  reportUrl?: string;
 }
 
-export interface InspectionReport {
-  overallCondition: "excellent" | "good" | "fair" | "poor";
-  frameStatus: string;
-  wheelsStatus: string;
-  brakesStatus: string;
-  drivetrainStatus: string;
-  notes: string;
-  images: string[];
+export interface InspectionReportDto {
+  reportId: number;
+  requestId: number;
+  requestStatus?: number; // 1=Pending, 2=In Progress, 3=Completed
+  frameCheck?: string;
+  brakeCheck?: string;
+  transmissionCheck?: string;
+  inspectorNote?: string;
+  finalVerdict?: number;
+  reportUrl?: string;
+  completedAt?: string;
+  inspectorName: string;
+  bikeTitle: string;
 }
 
 export const inspectorService = {
-  // Get inspector dashboard overview
-  getDashboard: async (): Promise<any> => {
-    const response = await axiosInstance.get(API_ENDPOINTS.INSPECTOR.DASHBOARD);
-    return response.data;
-  },
-
-  // Get list of assigned inspection requests
-  getInspections: async (status?: string): Promise<InspectionRequest[]> => {
-    const response = await axiosInstance.get(
-      API_ENDPOINTS.INSPECTOR.INSPECTIONS,
-      {
-        params: { status },
-      },
-    );
-    return response.data;
-  },
-
-  // Get details of a specific inspection request
-  getInspectionDetail: async (id: string): Promise<InspectionRequest> => {
-    const response = await axiosInstance.get(
-      API_ENDPOINTS.INSPECTOR.DETAIL(id),
-    );
-    return response.data;
-  },
-
-  // Submit an inspection report for a bike
-  submitReport: async (
-    id: string,
-    reportData: InspectionReport,
-    decision: "approve" | "reject",
-  ): Promise<InspectionRequest> => {
+  // Create inspection (auth)
+  createInspection: async (
+    data: CreateInspectionDto,
+  ): Promise<InspectionReportDto> => {
     const response = await axiosInstance.post(
-      API_ENDPOINTS.INSPECTOR.SUBMIT_REPORT(id),
-      {
-        report: reportData,
-        decision,
-      },
+      API_ENDPOINTS.INSPECTIONS.CREATE,
+      data,
     );
     return response.data;
+  },
+
+  // Get inspection by listing (public)
+  getByListing: async (listingId: number): Promise<InspectionReportDto> => {
+    const response = await axiosInstance.get(
+      API_ENDPOINTS.INSPECTIONS.BY_LISTING(listingId),
+    );
+    return response.data;
+  },
+
+  // Get my reports (auth)
+  getMyReports: async (): Promise<InspectionReportDto[]> => {
+    const response = await axiosInstance.get(
+      API_ENDPOINTS.INSPECTIONS.MY_REPORTS,
+    );
+    return response.data;
+  },
+
+  // Complete inspection (auth)
+  completeInspection: async (reportId: number): Promise<void> => {
+    await axiosInstance.patch(API_ENDPOINTS.INSPECTIONS.COMPLETE(reportId));
   },
 };

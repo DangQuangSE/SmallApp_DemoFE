@@ -1,12 +1,13 @@
 import { useState, type FC } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEye,
   faEyeSlash,
   faCircleXmark,
+  faCircleCheck,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { loginSchema, type LoginFormData } from "../../utils/validators";
@@ -18,6 +19,8 @@ import "../../components/features/auth/auth.css";
 const Login: FC = () => {
   const { isLoading, handleLogin, handleGoogleLogin } = useLogin();
   const [showPassword, setShowPassword] = useState(false);
+  const location = useLocation();
+  const successMessage = (location.state as { message?: string })?.message;
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -30,6 +33,17 @@ const Login: FC = () => {
         <div className="auth-header">
           <h1 className="auth-title">Đăng nhập</h1>
         </div>
+
+        {/* Success message from email verification */}
+        {successMessage && (
+          <div
+            className="verify-message success"
+            style={{ marginBottom: "1.5rem" }}
+          >
+            <FontAwesomeIcon icon={faCircleCheck} />
+            <span>{successMessage}</span>
+          </div>
+        )}
 
         {/* Login Form */}
         <form onSubmit={form.handleSubmit(handleLogin)}>

@@ -1,11 +1,11 @@
 import { type FC } from "react";
 import { Link } from "react-router-dom";
-import { type Bike } from "../../../services/bike.service";
+import { type BikePostDto } from "../../../services/bike.service";
 import { ROUTES } from "../../../constants/routes";
 import "./bike-card.css";
 
 interface BikeCardProps {
-  bike: Bike;
+  bike: BikePostDto;
 }
 
 const BikeCard: FC<BikeCardProps> = ({ bike }) => {
@@ -14,36 +14,42 @@ const BikeCard: FC<BikeCardProps> = ({ bike }) => {
     currency: "VND",
   }).format(bike.price);
 
+  // Get thumbnail image URL
+  const thumbnailImage =
+    bike.images?.find((img) => img.isThumbnail)?.mediaUrl ||
+    bike.images?.[0]?.mediaUrl ||
+    "/assets/images/placeholder-bike.png";
+
+  const bikeDetailPath = ROUTES.BIKE_DETAIL.replace(
+    ":id",
+    String(bike.listingId),
+  );
+
   return (
     <div className="bike-card">
-      <Link
-        to={ROUTES.BIKE_DETAIL.replace(":id", bike.id)}
-        className="bike-card-image-link"
-      >
+      <Link to={bikeDetailPath} className="bike-card-image-link">
         <img
-          src={bike.images[0] || "/assets/images/placeholder-bike.png"}
-          alt={bike.name}
+          src={thumbnailImage}
+          alt={bike.title}
           className="bike-card-image"
         />
-        {bike.condition === "new" && (
+        {bike.condition === "New" && (
           <span className="bike-badge badge-new">Mới</span>
         )}
-        {bike.condition === "used" && (
+        {bike.condition === "Used" && (
           <span className="bike-badge badge-used">Đã qua sử dụng</span>
         )}
       </Link>
 
       <div className="bike-card-content">
         <h3 className="bike-card-title">
-          <Link to={ROUTES.BIKE_DETAIL.replace(":id", bike.id)}>
-            {bike.name}
-          </Link>
+          <Link to={bikeDetailPath}>{bike.title}</Link>
         </h3>
-        <p className="bike-card-brand">{bike.brand}</p>
+        <p className="bike-card-brand">{bike.brandName}</p>
         <div className="bike-card-footer">
           <span className="bike-card-price">{formattedPrice}</span>
           <button className="btn btn-outline-primary btn-sm">
-            Thêm vào giỏ
+            Xem chi tiết
           </button>
         </div>
       </div>

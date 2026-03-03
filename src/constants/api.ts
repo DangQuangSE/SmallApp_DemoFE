@@ -19,84 +19,79 @@ export const API_CONFIG = {
 export const API_ENDPOINTS = {
   // Auth endpoints
   AUTH: {
-    SEND_OTP: "/auth/send-otp",
-    VERIFY_OTP: "/auth/verify-otp",
     REGISTER: "/auth/register",
     LOGIN: "/auth/login",
     GOOGLE_LOGIN: "/auth/google",
     LOGOUT: "/auth/logout",
-    REFRESH_TOKEN: "/auth/refresh-token",
-    FORGOT_PASSWORD: "/auth/forgot-password",
-    RESET_PASSWORD: "/auth/reset-password",
-  },
-
-  // User endpoints
-  USER: {
-    PROFILE: "/user/profile",
-    UPDATE_PROFILE: "/user/profile/update",
-    CHANGE_PASSWORD: "/user/change-password",
-    UPLOAD_AVATAR: "/user/avatar",
+    PROFILE: "/auth/profile",
+    UPDATE_PROFILE: "/auth/profile",
+    CONFIRM_EMAIL: "/auth/confirm-email",
+    RESEND_CONFIRMATION: "/auth/resend-confirmation",
   },
 
   // Bike endpoints
   BIKES: {
     LIST: "/bikes",
-    DETAIL: (id: string) => `/bikes/${id}`,
+    DETAIL: (id: number) => `/bikes/${id}`,
     CREATE: "/bikes",
-    UPDATE: (id: string) => `/bikes/${id}`,
-    DELETE: (id: string) => `/bikes/${id}`,
-    SEARCH: "/bikes/search",
-    FILTER: "/bikes/filter",
-  },
-
-  // Cart endpoints
-  CART: {
-    GET: "/cart",
-    ADD: "/cart/add",
-    UPDATE: (itemId: string) => `/cart/${itemId}`,
-    REMOVE: (itemId: string) => `/cart/${itemId}`,
-    CLEAR: "/cart/clear",
+    UPDATE: "/bikes",
+    DELETE: (id: number) => `/bikes/${id}`,
+    VISIBILITY: (id: number) => `/bikes/${id}/visibility`,
+    MY_POSTS: "/bikes/my-posts",
+    BRANDS: "/bikes/brands",
   },
 
   // Wishlist endpoints
   WISHLIST: {
     GET: "/wishlist",
-    ADD: "/wishlist/add",
-    REMOVE: (itemId: string) => `/wishlist/${itemId}`,
+    ADD: (listingId: number) => `/wishlist/${listingId}`,
+    REMOVE: (listingId: number) => `/wishlist/${listingId}`,
+    CHECK: (listingId: number) => `/wishlist/${listingId}/check`,
   },
 
   // Order endpoints
   ORDERS: {
-    LIST: "/orders",
-    DETAIL: (id: string) => `/orders/${id}`,
     CREATE: "/orders",
-    UPDATE_STATUS: (id: string) => `/orders/${id}/status`,
-    CANCEL: (id: string) => `/orders/${id}/cancel`,
+    DETAIL: (id: number) => `/orders/${id}`,
+    MY_PURCHASES: "/orders/my-purchases",
+    CANCEL: (id: number) => `/orders/${id}/cancel`,
+    CONFIRM_DELIVERY: (id: number) => `/orders/${id}/confirm-delivery`,
+    PAYMENT: "/orders/payment",
   },
 
-  // Seller endpoints
-  SELLER: {
-    DASHBOARD: "/seller/dashboard",
-    BIKES: "/seller/bikes",
-    ORDERS: "/seller/orders",
-    STATISTICS: "/seller/statistics",
+  // Message endpoints
+  MESSAGES: {
+    SEND: "/messages",
+    CONVERSATIONS: "/messages/conversations",
+    CONVERSATION_DETAIL: (otherUserId: number) =>
+      `/messages/conversations/${otherUserId}`,
+    MARK_READ: (otherUserId: number) =>
+      `/messages/conversations/${otherUserId}/read`,
+    UNREAD_COUNT: "/messages/unread-count",
   },
 
-  // Inspector endpoints
-  INSPECTOR: {
-    DASHBOARD: "/inspector/dashboard",
-    INSPECTIONS: "/inspector/inspections",
-    DETAIL: (id: string) => `/inspector/inspections/${id}`,
-    SUBMIT_REPORT: (id: string) => `/inspector/inspections/${id}/report`,
+  // Rating endpoints
+  RATINGS: {
+    CREATE: "/ratings",
+    BY_SELLER: (sellerId: number) => `/ratings/seller/${sellerId}`,
+  },
+
+  // Inspection endpoints
+  INSPECTIONS: {
+    CREATE: "/inspections",
+    BY_LISTING: (listingId: number) => `/inspections/listing/${listingId}`,
+    MY_REPORTS: "/inspections/my-reports",
+    COMPLETE: (reportId: number) => `/inspections/${reportId}/complete`,
   },
 
   // Admin endpoints
   ADMIN: {
     DASHBOARD: "/admin/dashboard",
+    PENDING_POSTS: "/admin/posts/pending",
+    MODERATE_POST: "/admin/posts/moderate",
     USERS: "/admin/users",
-    BIKES: "/admin/bikes",
-    ORDERS: "/admin/orders",
-    STATISTICS: "/admin/statistics",
+    USER_STATUS: (userId: number) => `/admin/users/${userId}/status`,
+    RESOLVE_DISPUTE: "/admin/disputes/resolve",
   },
 };
 

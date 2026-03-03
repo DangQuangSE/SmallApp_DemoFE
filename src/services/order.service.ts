@@ -1,54 +1,62 @@
 import { axiosInstance } from "./auth.service";
 import { API_ENDPOINTS } from "../constants/api";
 
-export interface OrderItem {
-  bikeId: string;
-  name: string;
-  price: number;
-  quantity: number;
-  image?: string;
+// ===== DTOs =====
+export interface CreateOrderDto {
+  listingId: number;
 }
 
-export interface Order {
-  id: string;
-  userId: string;
-  items: OrderItem[];
-  totalAmount: number;
-  status: "pending" | "processing" | "shipped" | "delivered" | "cancelled";
-  shippingAddress: string;
-  paymentMethod: string;
-  createdAt: string;
-  updatedAt: string;
+export interface OrderDto {
+  orderId: number;
+  orderStatus?: number; // 1=Pending, 2=Paid, 3=Shipping, 4=Completed, 5=Cancelled, 6=Refunded
+  totalAmount?: number;
+  orderDate?: string;
+  bikeTitle: string;
+  bikeImageUrl?: string;
+  buyerName: string;
+  sellerName: string;
 }
 
-export interface CreateOrderPayload {
-  items: { bikeId: string; quantity: number }[];
-  shippingAddress: string;
-  paymentMethod: string;
+export interface ProcessPaymentDto {
+  orderId: number;
+  amount: number;
+  paymentMethod?: string;
 }
 
 export const orderService = {
-  // Get all orders for the current user
-  getOrders: async (): Promise<Order[]> => {
-    const response = await axiosInstance.get(API_ENDPOINTS.ORDERS.LIST);
+  // Place order (auth)
+  createOrder: async (data: CreateOrderDto): Promise<OrderDto> => {
+    const response = await axiosInstance.post(
+      API_ENDPOINTS.ORDERS.CREATE,
+      data,
+    );
     return response.data;
   },
 
-  // Get details of a specific order
-  getOrderDetail: async (id: string): Promise<Order> => {
+  // Get order detail (auth)
+  getOrderDetail: async (id: number): Promise<OrderDto> => {
     const response = await axiosInstance.get(API_ENDPOINTS.ORDERS.DETAIL(id));
     return response.data;
   },
 
-  // Create a new order
-  createOrder: async (data: CreateOrderPayload): Promise<Order> => {
-    const response = await axiosInstance.post(API_ENDPOINTS.ORDERS.CREATE, data);
+  // Get my purchases (auth)
+  getMyPurchases: async (): Promise<OrderDto[]> => {
+    const response = await axiosInstance.get(API_ENDPOINTS.ORDERS.MY_PURCHASES);
     return response.data;
   },
 
-  // Cancel an order (if allowed)
-  cancelOrder: async (id: string, reason?: string): Promise<Order> => {
-    const response = await axiosInstance.post(API_ENDPOINTS.ORDERS.CANCEL(id), { reason });
-    return response.data;
+  // Cancel order (auth)
+  cancelOrder: async (id: number): Promise<void> => {
+    await axiosInstance.post(API_ENDPOINTS.ORDERS.CANCEL(id));
+  },
+
+  // Confirm delivery (auth)
+  confirmDelivery: async (id: number): Promise<void> => {
+    await axiosInstance.post(API_ENDPOINTS.ORDERS.CONFIRM_DELIVERY(id));
+  },
+
+  // Process payment (auth)
+  processPayment: async (data: ProcessPaymentDto): Promise<void> => {
+    await axiosInstance.post(API_ENDPOINTS.ORDERS.PAYMENT, data);
   },
 };

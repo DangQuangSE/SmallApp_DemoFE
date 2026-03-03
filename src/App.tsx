@@ -6,6 +6,7 @@ import Header from "./components/layout/header";
 import Footer from "./components/layout/footer";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
+import VerifyEmail from "./pages/auth/VerifyEmail";
 import BikeList from "./pages/bikes/BikeList";
 import {
   CartPage,
@@ -115,6 +116,7 @@ function App() {
                 {/* Auth Routes */}
                 <Route path={ROUTES.LOGIN} element={<Login />} />
                 <Route path={ROUTES.REGISTER} element={<Register />} />
+                <Route path={ROUTES.VERIFY_EMAIL} element={<VerifyEmail />} />
 
                 {/* Bike Routes */}
                 <Route path={ROUTES.BIKES} element={<BikeList />} />

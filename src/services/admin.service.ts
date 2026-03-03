@@ -1,49 +1,86 @@
 import { axiosInstance } from "./auth.service";
 import { API_ENDPOINTS } from "../constants/api";
 
-export interface AdminStatistics {
+// ===== DTOs =====
+export interface DashboardStatsDto {
   totalUsers: number;
-  totalBikes: number;
+  totalActiveListings: number;
+  pendingModerations: number;
   totalOrders: number;
-  revenue: number;
-  activeInspectors: number;
-  pendingVerifications: number;
+  totalRevenue: number;
+}
+
+export interface PendingPostDto {
+  listingId: number;
+  title: string;
+  sellerName: string;
+  price: number;
+  brandName?: string;
+  typeName?: string;
+  postedDate?: string;
+  primaryImageUrl?: string;
+}
+
+export interface ModeratePostDto {
+  listingId: number;
+  approve: boolean;
+  rejectionReason?: string;
+  notes?: string;
+}
+
+export interface AdminUserDto {
+  userId: number;
+  username: string;
+  email: string;
+  roleName: string;
+  status?: number; // 0=Banned, 1=Active
+  createdAt?: string;
+  totalListings: number;
+  totalOrders: number;
+}
+
+export interface ResolveDisputeDto {
+  orderId: number;
+  resolution: string;
+  refundBuyer: boolean;
+  banSeller: boolean;
 }
 
 export const adminService = {
-  // Get admin dashboard overview
-  getDashboard: async (): Promise<any> => {
+  // Get dashboard stats
+  getDashboard: async (): Promise<DashboardStatsDto> => {
     const response = await axiosInstance.get(API_ENDPOINTS.ADMIN.DASHBOARD);
     return response.data;
   },
 
-  // Get all users (with optional filtering)
-  getUsers: async (role?: string): Promise<any[]> => {
+  // Get pending posts for moderation
+  getPendingPosts: async (): Promise<PendingPostDto[]> => {
+    const response = await axiosInstance.get(API_ENDPOINTS.ADMIN.PENDING_POSTS);
+    return response.data;
+  },
+
+  // Moderate a post (approve/reject)
+  moderatePost: async (data: ModeratePostDto): Promise<void> => {
+    await axiosInstance.post(API_ENDPOINTS.ADMIN.MODERATE_POST, data);
+  },
+
+  // Get users (with optional roleId filter)
+  getUsers: async (roleId?: number): Promise<AdminUserDto[]> => {
     const response = await axiosInstance.get(API_ENDPOINTS.ADMIN.USERS, {
-      params: { role },
+      params: roleId ? { roleId } : undefined,
     });
     return response.data;
   },
 
-  // Get all bikes (with optional filtering)
-  getAllBikes: async (status?: string): Promise<any[]> => {
-    const response = await axiosInstance.get(API_ENDPOINTS.ADMIN.BIKES, {
-      params: { status },
+  // Update user status (ban/unban)
+  updateUserStatus: async (userId: number, status: number): Promise<void> => {
+    await axiosInstance.patch(API_ENDPOINTS.ADMIN.USER_STATUS(userId), {
+      status,
     });
-    return response.data;
   },
 
-  // Get all orders across the platform
-  getAllOrders: async (status?: string): Promise<any[]> => {
-    const response = await axiosInstance.get(API_ENDPOINTS.ADMIN.ORDERS, {
-      params: { status },
-    });
-    return response.data;
-  },
-
-  // Get platform-wide statistics
-  getStatistics: async (): Promise<AdminStatistics> => {
-    const response = await axiosInstance.get(API_ENDPOINTS.ADMIN.STATISTICS);
-    return response.data;
+  // Resolve dispute
+  resolveDispute: async (data: ResolveDisputeDto): Promise<void> => {
+    await axiosInstance.post(API_ENDPOINTS.ADMIN.RESOLVE_DISPUTE, data);
   },
 };

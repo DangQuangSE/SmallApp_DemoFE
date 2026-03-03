@@ -1,13 +1,12 @@
-import { axiosInstance } from "./auth.service";
-import { API_ENDPOINTS } from "../constants/api";
+// Cart service - NOTE: No cart endpoint exists in the new BE API.
+// Cart functionality should be handled client-side (localStorage) or removed.
+// Keeping a minimal stub for compilation compatibility.
 
 export interface CartItem {
-  id: string;
-  bikeId: string;
-  name: string;
+  listingId: number;
+  title: string;
   price: number;
-  image: string;
-  quantity: number;
+  imageUrl: string;
 }
 
 export interface Cart {
@@ -15,38 +14,40 @@ export interface Cart {
   totalAmount: number;
 }
 
+// Client-side cart using localStorage
 export const cartService = {
-  // Get cart
-  getCart: async (): Promise<Cart> => {
-    const response = await axiosInstance.get(API_ENDPOINTS.CART.GET);
-    return response.data;
+  getCart: (): Cart => {
+    const cartStr = localStorage.getItem("cart");
+    try {
+      return cartStr ? JSON.parse(cartStr) : { items: [], totalAmount: 0 };
+    } catch {
+      return { items: [], totalAmount: 0 };
+    }
   },
 
-  // Add to cart
-  addToCart: async (bikeId: string, quantity: number = 1): Promise<Cart> => {
-    const response = await axiosInstance.post(API_ENDPOINTS.CART.ADD, {
-      bikeId,
-      quantity,
-    });
-    return response.data;
+  addToCart: (item: CartItem): Cart => {
+    const cart = cartService.getCart();
+    const existing = cart.items.find((i) => i.listingId === item.listingId);
+    if (!existing) {
+      cart.items.push(item);
+      cart.totalAmount += item.price;
+    }
+    localStorage.setItem("cart", JSON.stringify(cart));
+    return cart;
   },
 
-  // Update cart item quantity
-  updateQuantity: async (itemId: string, quantity: number): Promise<Cart> => {
-    const response = await axiosInstance.put(API_ENDPOINTS.CART.UPDATE(itemId), {
-      quantity,
-    });
-    return response.data;
+  removeFromCart: (listingId: number): Cart => {
+    const cart = cartService.getCart();
+    const item = cart.items.find((i) => i.listingId === listingId);
+    if (item) {
+      cart.items = cart.items.filter((i) => i.listingId !== listingId);
+      cart.totalAmount -= item.price;
+    }
+    localStorage.setItem("cart", JSON.stringify(cart));
+    return cart;
   },
 
-  // Remove from cart
-  removeFromCart: async (itemId: string): Promise<Cart> => {
-    const response = await axiosInstance.delete(API_ENDPOINTS.CART.REMOVE(itemId));
-    return response.data;
-  },
-
-  // Clear cart
-  clearCart: async (): Promise<void> => {
-    await axiosInstance.delete(API_ENDPOINTS.CART.CLEAR);
+  clearCart: (): void => {
+    localStorage.removeItem("cart");
   },
 };

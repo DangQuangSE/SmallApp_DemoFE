@@ -1,7 +1,50 @@
 import axios from "axios";
 import { API_CONFIG, API_ENDPOINTS } from "../constants/api";
-
 import { handleApiError } from "../utils/api-error";
+
+// ===== DTOs =====
+export interface RegisterDto {
+  username: string;
+  email: string;
+  password: string;
+  fullName?: string;
+  phoneNumber?: string;
+  roleId: number; // 1=Admin, 2=Buyer, 3=Seller, 4=Inspector
+}
+
+export interface LoginDto {
+  email: string;
+  password: string;
+}
+
+export interface AuthResultDto {
+  succeeded: boolean;
+  token?: string;
+  user?: UserProfileDto;
+  errorMessage?: string;
+  requiresEmailConfirmation: boolean;
+}
+
+export interface UserProfileDto {
+  userId: number;
+  username: string;
+  email: string;
+  fullName?: string;
+  phoneNumber?: string;
+  avatarUrl?: string;
+  address?: string;
+  roleName: string;
+  status?: number; // 0=Banned, 1=Active
+  isVerified?: boolean;
+  createdAt?: string;
+}
+
+export interface UpdateProfileDto {
+  fullName?: string;
+  phoneNumber?: string;
+  avatarUrl?: string;
+  address?: string;
+}
 
 // Axios instance
 export const axiosInstance = axios.create({
@@ -32,35 +75,17 @@ axiosInstance.interceptors.response.use(
 
 // Auth Service
 export const authService = {
-  // Send OTP to email
-  sendOTP: async (email: string) => {
-    const response = await axiosInstance.post(API_ENDPOINTS.AUTH.SEND_OTP, {
-      email,
-    });
-    return response.data;
-  },
-
-  // Verify OTP
-  verifyOTP: async (email: string, otp: string) => {
-    const response = await axiosInstance.post(API_ENDPOINTS.AUTH.VERIFY_OTP, {
-      email,
-      otp,
-    });
-    return response.data;
-  },
-
-  // Complete registration with password
-  register: async (email: string, password: string, otpToken: string) => {
-    const response = await axiosInstance.post(API_ENDPOINTS.AUTH.REGISTER, {
-      email,
-      password,
-      otpToken,
-    });
+  // Register
+  register: async (data: RegisterDto): Promise<AuthResultDto> => {
+    const response = await axiosInstance.post(
+      API_ENDPOINTS.AUTH.REGISTER,
+      data,
+    );
     return response.data;
   },
 
   // Login
-  login: async (email: string, password: string) => {
+  login: async (email: string, password: string): Promise<AuthResultDto> => {
     const response = await axiosInstance.post(API_ENDPOINTS.AUTH.LOGIN, {
       email,
       password,
@@ -69,41 +94,45 @@ export const authService = {
   },
 
   // Google OAuth login
-  googleLogin: async (idToken: string) => {
+  googleLogin: async (idToken: string): Promise<AuthResultDto> => {
     const response = await axiosInstance.post(API_ENDPOINTS.AUTH.GOOGLE_LOGIN, {
       idToken,
     });
     return response.data;
   },
 
-  // Forgot password
-  forgotPassword: async (email: string) => {
+  // Get current user profile
+  getProfile: async (): Promise<UserProfileDto> => {
+    const response = await axiosInstance.get(API_ENDPOINTS.AUTH.PROFILE);
+    return response.data;
+  },
+
+  // Update profile
+  updateProfile: async (data: UpdateProfileDto): Promise<UserProfileDto> => {
+    const response = await axiosInstance.put(
+      API_ENDPOINTS.AUTH.UPDATE_PROFILE,
+      data,
+    );
+    return response.data;
+  },
+
+  // Confirm email with OTP
+  confirmEmail: async (
+    email: string,
+    otp: string,
+  ): Promise<{ message: string }> => {
     const response = await axiosInstance.post(
-      API_ENDPOINTS.AUTH.FORGOT_PASSWORD,
+      API_ENDPOINTS.AUTH.CONFIRM_EMAIL,
+      { email, otp },
+    );
+    return response.data;
+  },
+
+  // Resend confirmation email
+  resendConfirmation: async (email: string): Promise<{ message: string }> => {
+    const response = await axiosInstance.post(
+      API_ENDPOINTS.AUTH.RESEND_CONFIRMATION,
       { email },
-    );
-    return response.data;
-  },
-
-  // Reset password
-  resetPassword: async (password: string, resetToken: string) => {
-    const response = await axiosInstance.post(
-      API_ENDPOINTS.AUTH.RESET_PASSWORD,
-      {
-        password,
-        token: resetToken,
-      },
-    );
-    return response.data;
-  },
-
-  // Refresh token
-  refreshToken: async (refreshToken: string) => {
-    const response = await axiosInstance.post(
-      API_ENDPOINTS.AUTH.REFRESH_TOKEN,
-      {
-        token: refreshToken,
-      },
     );
     return response.data;
   },
@@ -114,14 +143,8 @@ export const authService = {
     localStorage.removeItem("user");
   },
 
-  // Get current user profile
-  getProfile: async () => {
-    const response = await axiosInstance.get(API_ENDPOINTS.USER.PROFILE);
-    return response.data;
-  },
-
   // Get current user from local storage
-  getCurrentUser: () => {
+  getCurrentUser: (): UserProfileDto | null => {
     const userStr = localStorage.getItem("user");
     try {
       return userStr ? JSON.parse(userStr) : null;
@@ -132,16 +155,7 @@ export const authService = {
   },
 
   // Save user data
-  saveUserData: (
-    user: {
-      id: string;
-      email: string;
-      fullName: string;
-      role: string;
-      avatarUrl?: string;
-    },
-    token: string,
-  ) => {
+  saveUserData: (user: UserProfileDto, token: string) => {
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("access_token", token);
   },

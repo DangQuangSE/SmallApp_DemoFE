@@ -1,22 +1,27 @@
 import { useState, useEffect, type FC } from "react";
 import {
   bikeService,
-  type Bike,
-  type BikeFilters,
+  type BikePostDto,
+  type BikeFilterDto,
 } from "../../services/bike.service";
 import BikeCard from "../../components/features/bikes/BikeCard";
 import "./bike-list.css";
 
 const BikeList: FC = () => {
-  const [bikes, setBikes] = useState<Bike[]>([]);
+  const [bikes, setBikes] = useState<BikePostDto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [filters, setFilters] = useState<BikeFilters>({});
+  const [filters, setFilters] = useState<BikeFilterDto>({});
 
   const fetchBikes = async () => {
     setIsLoading(true);
     try {
       const data = await bikeService.getBikes(filters);
-      setBikes(data);
+      // Handle both paged result and plain array response
+      if (Array.isArray(data)) {
+        setBikes(data);
+      } else if (data && Array.isArray(data.items)) {
+        setBikes(data.items);
+      }
     } catch (error) {
       console.error("Failed to fetch bikes:", error);
     } finally {
@@ -28,7 +33,7 @@ const BikeList: FC = () => {
     fetchBikes();
   }, [filters]);
 
-  const handleFilterChange = (key: keyof BikeFilters, value: any) => {
+  const handleFilterChange = (key: keyof BikeFilterDto, value: any) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
@@ -57,7 +62,7 @@ const BikeList: FC = () => {
       ) : bikes.length > 0 ? (
         <div className="bike-grid">
           {bikes.map((bike) => (
-            <BikeCard key={bike.id} bike={bike} />
+            <BikeCard key={bike.listingId} bike={bike} />
           ))}
         </div>
       ) : (

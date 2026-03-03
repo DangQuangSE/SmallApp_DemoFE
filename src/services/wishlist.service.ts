@@ -1,31 +1,29 @@
 import { axiosInstance } from "./auth.service";
 import { API_ENDPOINTS } from "../constants/api";
-import { type Bike } from "./bike.service";
-
-export interface WishlistItem {
-  id: string;
-  bikeId: string;
-  bike: Bike;
-  addedAt: string;
-}
+import { type BikePostDto } from "./bike.service";
 
 export const wishlistService = {
-  // Get user's wishlist
-  getWishlist: async (): Promise<WishlistItem[]> => {
+  // Get user's wishlist (auth) - returns BikePostDto[]
+  getWishlist: async (): Promise<BikePostDto[]> => {
     const response = await axiosInstance.get(API_ENDPOINTS.WISHLIST.GET);
     return response.data;
   },
 
-  // Add a bike to the wishlist
-  addToWishlist: async (bikeId: string): Promise<WishlistItem> => {
-    const response = await axiosInstance.post(API_ENDPOINTS.WISHLIST.ADD, {
-      bikeId,
-    });
-    return response.data;
+  // Add a listing to the wishlist (auth)
+  addToWishlist: async (listingId: number): Promise<void> => {
+    await axiosInstance.post(API_ENDPOINTS.WISHLIST.ADD(listingId));
   },
 
-  // Remove a bike from the wishlist
-  removeFromWishlist: async (itemId: string): Promise<void> => {
-    await axiosInstance.delete(API_ENDPOINTS.WISHLIST.REMOVE(itemId));
+  // Remove a listing from the wishlist (auth)
+  removeFromWishlist: async (listingId: number): Promise<void> => {
+    await axiosInstance.delete(API_ENDPOINTS.WISHLIST.REMOVE(listingId));
+  },
+
+  // Check if a listing is in wishlist (auth)
+  checkWishlist: async (listingId: number): Promise<boolean> => {
+    const response = await axiosInstance.get(
+      API_ENDPOINTS.WISHLIST.CHECK(listingId),
+    );
+    return response.data;
   },
 };

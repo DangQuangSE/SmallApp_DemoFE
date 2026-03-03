@@ -4,6 +4,7 @@ export const ROUTES = {
   STORE: "/store",
   LOGIN: "/login",
   REGISTER: "/register",
+  VERIFY_EMAIL: "/verify-email",
 
   // Buyer routes
   BIKES: "/bikes",

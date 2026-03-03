@@ -1,50 +1,23 @@
 import { axiosInstance } from "./auth.service";
 import { API_ENDPOINTS } from "../constants/api";
-import { type Bike } from "./bike.service";
-import { type Order } from "./order.service";
+import { type BikePostDto } from "./bike.service";
+import { type OrderDto } from "./order.service";
 
-export interface SellerStatistics {
-  totalRevenue: number;
-  totalOrders: number;
-  activeListings: number;
-  soldBikes: number;
-  recentViews: number;
-}
+// Seller-specific service
+// Note: In the new BE, seller gets their listings via /api/bikes/my-posts
+// and orders via /api/orders/my-purchases (buyer side).
+// The seller-specific dashboard/statistics endpoints are removed in the new BE.
 
 export const sellerService = {
-  // Get seller dashboard overview
-  getDashboard: async (): Promise<any> => {
-    const response = await axiosInstance.get(API_ENDPOINTS.SELLER.DASHBOARD);
+  // Get seller's own bike listings (via bikes endpoint)
+  getMyBikes: async (): Promise<BikePostDto[]> => {
+    const response = await axiosInstance.get(API_ENDPOINTS.BIKES.MY_POSTS);
     return response.data;
   },
 
-  // Get all bikes listed by the seller
-  getMyBikes: async (): Promise<Bike[]> => {
-    const response = await axiosInstance.get(API_ENDPOINTS.SELLER.BIKES);
-    return response.data;
-  },
-
-  // Get orders related to the seller's bikes
-  getOrders: async (): Promise<Order[]> => {
-    const response = await axiosInstance.get(API_ENDPOINTS.SELLER.ORDERS);
-    return response.data;
-  },
-
-  // Update order status (e.g., from 'pending' to 'processing' or 'shipped')
-  updateOrderStatus: async (
-    orderId: string,
-    status: string,
-  ): Promise<Order> => {
-    const response = await axiosInstance.put(
-      API_ENDPOINTS.ORDERS.UPDATE_STATUS(orderId),
-      { status },
-    );
-    return response.data;
-  },
-
-  // Get seller statistics and metrics
-  getStatistics: async (): Promise<SellerStatistics> => {
-    const response = await axiosInstance.get(API_ENDPOINTS.SELLER.STATISTICS);
+  // Get buyer's purchases (kept for now, seller orders removed in new BE)
+  getMyPurchases: async (): Promise<OrderDto[]> => {
+    const response = await axiosInstance.get(API_ENDPOINTS.ORDERS.MY_PURCHASES);
     return response.data;
   },
 };

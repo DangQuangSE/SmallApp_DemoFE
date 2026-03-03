@@ -4,96 +4,53 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import toast from "react-hot-toast";
 
+import { registerSchema, type RegisterFormData } from "../../utils/validators";
 import {
-  emailSchema,
-  otpSchema,
-  passwordSchema,
-  type EmailFormData,
-  type OTPFormData,
-  type PasswordFormData,
-} from "../../utils/validators";
-import { authService } from "../../services/auth.service";
+  authService,
+  type AuthResultDto,
+  type RegisterDto,
+} from "../../services/auth.service";
 import { useAuth } from "../../contexts/AuthContext";
 import { ROUTES } from "../../constants/routes";
-
-export type RegisterStep = "email" | "otp" | "password";
 
 export const useRegister = () => {
   const navigate = useNavigate();
   const { register: registerUser, googleLogin: authGoogleLogin } = useAuth();
-  const [step, setStep] = useState<RegisterStep>("email");
-  const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [resendCooldown, setResendCooldown] = useState(0);
 
-  const emailForm = useForm<EmailFormData>({
-    resolver: zodResolver(emailSchema),
+  const registerForm = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      roleId: 2, // Default: Buyer
+    },
   });
 
-  const otpForm = useForm<OTPFormData>({
-    resolver: zodResolver(otpSchema),
-  });
-
-  const passwordForm = useForm<PasswordFormData>({
-    resolver: zodResolver(passwordSchema),
-  });
-
-  // Step 1: Send OTP
-  const handleEmailSubmit = async (data: EmailFormData) => {
+  // Submit registration
+  const handleRegisterSubmit = async (data: RegisterFormData) => {
     setIsLoading(true);
     try {
-      await authService.sendOTP(data.email);
-      setEmail(data.email);
-      setStep("otp");
-      toast.success("OTP đã được gửi đến email của bạn!");
-    } catch (error: unknown) {
-      const message =
-        error instanceof Error ? error.message : "Gửi OTP thất bại!";
-      toast.error(message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Step 2: Verify OTP
-  const handleOTPSubmit = async (data: OTPFormData) => {
-    setIsLoading(true);
-    try {
-      await authService.verifyOTP(email, data.otp);
-      setStep("password");
-      toast.success("Xác minh OTP thành công!");
-    } catch (error: unknown) {
-      const message =
-        error instanceof Error ? error.message : "OTP không hợp lệ!";
-      toast.error(message);
-      otpForm.reset();
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Step 3: Complete registration
-  const handlePasswordSubmit = async (data: PasswordFormData) => {
-    setIsLoading(true);
-    try {
-      const response = await authService.register(
-        email,
-        data.password,
-        "mock-otp-token",
-      );
-      const responseData = response as {
-        user: {
-          id: string;
-          email: string;
-          fullName: string;
-          role: string;
-          avatarUrl?: string;
-        };
-        token: string;
+      const registerData: RegisterDto = {
+        username: data.username,
+        email: data.email,
+        password: data.password,
+        fullName: data.fullName || undefined,
+        phoneNumber: data.phoneNumber || undefined,
+        roleId: data.roleId,
       };
-      registerUser(responseData.user, responseData.token);
-      toast.success("Đăng ký thành công!");
-      navigate(ROUTES.HOME);
+      const response: AuthResultDto = await authService.register(registerData);
+      if (response.requiresEmailConfirmation) {
+        // KHÔNG lưu token (token = null)
+        toast.success("Đăng ký thành công! Vui lòng kiểm tra email.");
+        navigate(ROUTES.VERIFY_EMAIL, {
+          state: { email: data.email },
+        });
+      } else if (response.succeeded && response.user && response.token) {
+        registerUser(response.user, response.token);
+        toast.success("Đăng ký thành công!");
+        navigate(ROUTES.HOME);
+      } else {
+        toast.error(response.errorMessage || "Đăng ký thất bại!");
+      }
     } catch (error: unknown) {
       const message =
         error instanceof Error ? error.message : "Đăng ký thất bại!";
@@ -103,50 +60,16 @@ export const useRegister = () => {
     }
   };
 
-  // Resend OTP logic
-  const handleResendOTP = async () => {
-    if (resendCooldown > 0) return;
-
-    setIsLoading(true);
-    try {
-      await authService.sendOTP(email);
-      toast.success("OTP mới đã được gửi!");
-      setResendCooldown(60);
-
-      const interval = setInterval(() => {
-        setResendCooldown((prev) => {
-          if (prev <= 1) {
-            clearInterval(interval);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    } catch (error: unknown) {
-      const message =
-        error instanceof Error ? error.message : "Gửi lại OTP thất bại!";
-      toast.error(message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleGoogleLogin = async (credential: string) => {
     try {
-      const response = await authService.googleLogin(credential);
-      const responseData = response as {
-        user: {
-          id: string;
-          email: string;
-          fullName: string;
-          role: string;
-          avatarUrl?: string;
-        };
-        token: string;
-      };
-      authGoogleLogin(responseData.user, responseData.token);
-      toast.success("Đăng nhập Google thành công!");
-      navigate(ROUTES.HOME);
+      const response: AuthResultDto = await authService.googleLogin(credential);
+      if (response.succeeded && response.user && response.token) {
+        authGoogleLogin(response.user, response.token);
+        toast.success("Đăng nhập Google thành công!");
+        navigate(ROUTES.HOME);
+      } else {
+        toast.error(response.errorMessage || "Đăng nhập Google thất bại!");
+      }
     } catch (error: unknown) {
       const message =
         error instanceof Error ? error.message : "Đăng nhập Google thất bại!";
@@ -155,18 +78,9 @@ export const useRegister = () => {
   };
 
   return {
-    step,
-    setStep,
-    email,
     isLoading,
-    resendCooldown,
-    emailForm,
-    otpForm,
-    passwordForm,
-    handleEmailSubmit,
-    handleOTPSubmit,
-    handlePasswordSubmit,
-    handleResendOTP,
+    registerForm,
+    handleRegisterSubmit,
     handleGoogleLogin,
   };
 };

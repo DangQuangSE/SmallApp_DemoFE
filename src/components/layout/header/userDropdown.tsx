@@ -13,9 +13,10 @@ const UserDropdown = () => {
 
   const displayUser = user || {
     fullName: "Guest",
+    username: "guest",
     email: "",
     avatarUrl: "",
-    role: "buyer",
+    roleName: "Buyer",
   };
 
   // Đóng dropdown khi click bên ngoài
@@ -62,7 +63,9 @@ const UserDropdown = () => {
             "👤"
           )}
         </span>
-        <span className="user-name">{displayUser.fullName}</span>
+        <span className="user-name">
+          {displayUser.fullName || displayUser.username}
+        </span>
         <span className="dropdown-icon">{isOpen ? "▲" : "▼"}</span>
       </button>
 
@@ -83,7 +86,9 @@ const UserDropdown = () => {
               )}
             </div>
             <div className="user-details">
-              <p className="user-name-large">{displayUser.fullName}</p>
+              <p className="user-name-large">
+                {displayUser.fullName || displayUser.username}
+              </p>
               <p className="user-email">{displayUser.email}</p>
             </div>
           </div>
@@ -110,7 +115,7 @@ const UserDropdown = () => {
           </Link>
 
           {/* Role-specific menu */}
-          {displayUser.role === "seller" && (
+          {displayUser.roleName === "Seller" && (
             <Link
               to="/seller/dashboard"
               className="menu-item"
