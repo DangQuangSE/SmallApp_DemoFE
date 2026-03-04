@@ -28,6 +28,8 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import PostModerationPage from "./pages/admin/PostModerationPage";
 import UserManagementPage from "./pages/admin/UserManagementPage";
 import AbuseManagementPage from "./pages/admin/AbuseManagementPage";
+import CategoryManagementPage from "./pages/admin/CategoryManagementPage";
+import BrandManagementPage from "./pages/admin/BrandManagementPage";
 import PendingInspectionsPage from "./pages/inspector/PendingInspectionsPage";
 import AssignedInspectionsPage from "./pages/inspector/AssignedInspectionsPage";
 import UploadReportPage from "./pages/inspector/UploadReportPage";
@@ -219,6 +221,14 @@ function App() {
                   <Route
                     path={ROUTES.ADMIN_USERS}
                     element={<UserManagementPage />}
+                  />
+                  <Route
+                    path={ROUTES.ADMIN_CATEGORIES}
+                    element={<CategoryManagementPage />}
+                  />
+                  <Route
+                    path={ROUTES.ADMIN_BRANDS}
+                    element={<BrandManagementPage />}
                   />
                   <Route
                     path={ROUTES.ADMIN_ABUSE}

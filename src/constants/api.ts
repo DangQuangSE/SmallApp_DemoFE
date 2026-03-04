@@ -132,6 +132,34 @@ export const API_ENDPOINTS = {
     ABUSE_REPORTS: "/admin/abuse/reports",
     ABUSE_RESOLVE: "/admin/abuse/resolve",
   },
+
+  // UserManager endpoints (Admin CRUD)
+  USER_MANAGER: {
+    LIST: "/usermanager",
+    DETAIL: (userId: number) => `/usermanager/${userId}`,
+    CREATE: "/usermanager",
+    UPDATE: "/usermanager",
+    DELETE: (userId: number) => `/usermanager/${userId}`,
+    RESET_PASSWORD: (userId: number) => `/usermanager/${userId}/reset-password`,
+  },
+
+  // Categories endpoints
+  CATEGORIES: {
+    LIST: "/categories",
+    DETAIL: (typeId: number) => `/categories/${typeId}`,
+    CREATE: "/categories",
+    UPDATE: "/categories",
+    DELETE: (typeId: number) => `/categories/${typeId}`,
+  },
+
+  // Brands endpoints
+  BRANDS: {
+    LIST: "/brands",
+    DETAIL: (brandId: number) => `/brands/${brandId}`,
+    CREATE: "/brands",
+    UPDATE: "/brands",
+    DELETE: (brandId: number) => `/brands/${brandId}`,
+  },
 };
 
 // Helper function to get full URL
