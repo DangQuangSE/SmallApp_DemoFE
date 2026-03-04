@@ -1,7 +1,7 @@
 import { useState, type FC } from "react";
 import toast from "react-hot-toast";
 import { inspectionService } from "../../../services/inspection.service";
-import "../../inspection/inspection.css";
+import "../../../pages/inspection/inspection.css";
 
 interface RequestInspectionButtonProps {
   listingId: number;

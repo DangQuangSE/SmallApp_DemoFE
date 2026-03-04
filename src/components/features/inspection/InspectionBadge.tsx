@@ -2,7 +2,7 @@ import { useState, useEffect, type FC } from "react";
 import { inspectionService } from "../../../services/inspection.service";
 import type { InspectionReportDto } from "../../../types/inspection.types";
 import { FINAL_VERDICT } from "../../../types/inspection.types";
-import "../../inspection/inspection.css";
+import "../../../pages/inspection/inspection.css";
 
 interface InspectionBadgeProps {
   listingId: number;
