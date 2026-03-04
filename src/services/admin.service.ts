@@ -1,6 +1,7 @@
 import { axiosInstance } from "./auth.service";
 import { API_ENDPOINTS } from "../constants/api";
 import type {
+  AbuseRequestDto,
   AbuseReportDto,
   ResolveAbuseRequestDto,
 } from "../types/abuse.types";
@@ -10,6 +11,7 @@ export interface DashboardStatsDto {
   totalUsers: number;
   totalActiveListings: number;
   pendingModerations: number;
+  pendingAbuseReports: number;
   totalOrders: number;
   totalRevenue: number;
 }
@@ -88,25 +90,21 @@ export const adminService = {
     await axiosInstance.post(API_ENDPOINTS.ADMIN.RESOLVE_DISPUTE, data);
   },
 
-  // Get pending abuse reports
-  getPendingAbuse: async (): Promise<AbuseReportDto[]> => {
+  // Get pending abuse requests — returns AbuseRequestDto[]
+  getPendingAbuse: async (): Promise<AbuseRequestDto[]> => {
     const response = await axiosInstance.get(API_ENDPOINTS.ADMIN.ABUSE_PENDING);
     return response.data;
   },
 
-  // Get all abuse reports (with optional status filter)
-  getAbuseReports: async (status?: number): Promise<AbuseReportDto[]> => {
-    const response = await axiosInstance.get(
-      API_ENDPOINTS.ADMIN.ABUSE_REPORTS,
-      {
-        params: status != null ? { status } : undefined,
-      },
-    );
+  // Get all resolved abuse reports — returns AbuseReportDto[]
+  getAbuseReports: async (): Promise<AbuseReportDto[]> => {
+    const response = await axiosInstance.get(API_ENDPOINTS.ADMIN.ABUSE_REPORTS);
     return response.data;
   },
 
-  // Resolve an abuse report
-  resolveAbuse: async (data: ResolveAbuseRequestDto): Promise<void> => {
-    await axiosInstance.post(API_ENDPOINTS.ADMIN.ABUSE_RESOLVE, data);
+  // Resolve an abuse request
+  resolveAbuse: async (data: ResolveAbuseRequestDto): Promise<AbuseReportDto> => {
+    const response = await axiosInstance.post(API_ENDPOINTS.ADMIN.ABUSE_RESOLVE, data);
+    return response.data;
   },
 };

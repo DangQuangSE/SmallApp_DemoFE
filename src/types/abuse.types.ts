@@ -1,35 +1,42 @@
-// ===== Request DTOs =====
+// ===== Request DTOs (match BE exactly) =====
 
 export interface CreateAbuseRequestDto {
-  reportedUserId: number;
-  listingId?: number;
-  orderId?: number;
+  targetListingId?: number;
+  targetUserId?: number;
   reason: string;
-  description: string;
 }
 
 export interface ResolveAbuseRequestDto {
-  reportId: number;
+  requestAbuseId: number;
   resolution: string;
-  banUser: boolean;
+  status: number; // 2=Resolved, 3=Rejected
+  banTargetUser: boolean;
+  hideTargetListing: boolean;
 }
 
-// ===== Response DTOs =====
+// ===== Response DTOs (match BE exactly) =====
+
+export interface AbuseRequestDto {
+  requestAbuseId: number;
+  reporterId: number;
+  reporterName: string;
+  targetListingId?: number;
+  targetListingTitle?: string;
+  targetUserId?: number;
+  targetUserName?: string;
+  reason: string;
+  createdAt?: string;
+  isResolved: boolean;
+}
 
 export interface AbuseReportDto {
-  reportId: number;
-  reporterName: string;
-  reportedUserName: string;
-  reportedUserId: number;
-  listingId?: number;
-  listingTitle?: string;
-  orderId?: number;
-  reason: string;
-  description: string;
-  status: number; // 1=Pending, 2=Resolved, 3=Rejected
+  reportAbuseId: number;
+  requestAbuseId: number;
+  adminName: string;
   resolution?: string;
-  createdAt?: string;
+  status?: number; // 2=Resolved, 3=Rejected
   resolvedAt?: string;
+  request: AbuseRequestDto;
 }
 
 // ===== Status constants =====
@@ -40,7 +47,7 @@ export const ABUSE_STATUS = {
 } as const;
 
 export const ABUSE_STATUS_LABELS: Record<number, string> = {
-  [ABUSE_STATUS.PENDING]: "Đang chờ",
-  [ABUSE_STATUS.RESOLVED]: "Đã xử lý",
-  [ABUSE_STATUS.REJECTED]: "Đã từ chối",
+  [ABUSE_STATUS.PENDING]: "Pending",
+  [ABUSE_STATUS.RESOLVED]: "Resolved",
+  [ABUSE_STATUS.REJECTED]: "Rejected",
 };

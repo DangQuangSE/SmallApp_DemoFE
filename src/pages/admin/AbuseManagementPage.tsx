@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { useAuth } from "../../contexts/AuthContext";
 import { adminService } from "../../services/admin.service";
 import type {
+  AbuseRequestDto,
   AbuseReportDto,
   ResolveAbuseRequestDto,
 } from "../../types/abuse.types";
@@ -11,52 +12,44 @@ import { ABUSE_STATUS, ABUSE_STATUS_LABELS } from "../../types/abuse.types";
 import { ROUTES } from "../../constants/routes";
 import "./admin.css";
 
-const getStatusClass = (status: number): string => {
-  switch (status) {
-    case ABUSE_STATUS.PENDING:
-      return "pending";
-    case ABUSE_STATUS.RESOLVED:
-      return "resolved";
-    case ABUSE_STATUS.REJECTED:
-      return "rejected";
-    default:
-      return "";
-  }
-};
+// ===== Resolve Modal =====
 
 interface ResolveModalProps {
-  report: AbuseReportDto;
+  request: AbuseRequestDto;
   onClose: () => void;
-  onResolved: (reportId: number) => void;
+  onResolved: () => void;
 }
 
-const ResolveModal: FC<ResolveModalProps> = ({
-  report,
-  onClose,
-  onResolved,
-}) => {
+const ResolveModal: FC<ResolveModalProps> = ({ request, onClose, onResolved }) => {
   const [resolution, setResolution] = useState("");
-  const [banUser, setBanUser] = useState(false);
+  const [banTargetUser, setBanTargetUser] = useState(false);
+  const [hideTargetListing, setHideTargetListing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async () => {
+  const handleResolve = async (status: number) => {
     if (!resolution.trim()) {
-      toast.error("Vui lòng nhập kết quả xử lý.");
+      toast.error("Please enter a resolution.");
       return;
     }
 
     setIsSubmitting(true);
     try {
       const data: ResolveAbuseRequestDto = {
-        reportId: report.reportId,
+        requestAbuseId: request.requestAbuseId,
         resolution,
-        banUser,
+        status,
+        banTargetUser,
+        hideTargetListing,
       };
       await adminService.resolveAbuse(data);
-      toast.success("Đã xử lý báo cáo thành công!");
-      onResolved(report.reportId);
+      toast.success(
+        status === ABUSE_STATUS.RESOLVED
+          ? "Report resolved successfully!"
+          : "Report rejected."
+      );
+      onResolved();
     } catch {
-      toast.error("Xử lý báo cáo thất bại.");
+      toast.error("Failed to process report.");
     } finally {
       setIsSubmitting(false);
     }
@@ -65,45 +58,62 @@ const ResolveModal: FC<ResolveModalProps> = ({
   return (
     <div className="resolve-modal-overlay" onClick={onClose}>
       <div className="resolve-modal" onClick={(e) => e.stopPropagation()}>
-        <h3>Xử lý báo cáo #{report.reportId}</h3>
+        <h3>Process Report #{request.requestAbuseId}</h3>
 
-        <p>
-          <strong>Lý do:</strong> {report.reason}
-        </p>
-        <p>
-          <strong>Mô tả:</strong> {report.description}
-        </p>
-        <p>
-          <strong>Người bị báo cáo:</strong> {report.reportedUserName}
-        </p>
+        <p><strong>Reporter:</strong> {request.reporterName}</p>
+        {request.targetListingTitle && (
+          <p><strong>Listing:</strong> {request.targetListingTitle} (ID: {request.targetListingId})</p>
+        )}
+        {request.targetUserName && (
+          <p><strong>Reported User:</strong> {request.targetUserName} (ID: {request.targetUserId})</p>
+        )}
+        <p><strong>Reason:</strong> {request.reason}</p>
 
-        <label>Kết quả xử lý:</label>
+        <label>Resolution:</label>
         <textarea
           value={resolution}
           onChange={(e) => setResolution(e.target.value)}
-          placeholder="Nhập kết quả xử lý..."
+          placeholder="Enter resolution details..."
           rows={4}
         />
 
         <label className="resolve-modal-checkbox">
           <input
             type="checkbox"
-            checked={banUser}
-            onChange={(e) => setBanUser(e.target.checked)}
+            checked={banTargetUser}
+            onChange={(e) => setBanTargetUser(e.target.checked)}
           />
-          Cấm người dùng bị báo cáo
+          Ban reported user
         </label>
+
+        {request.targetListingId && (
+          <label className="resolve-modal-checkbox">
+            <input
+              type="checkbox"
+              checked={hideTargetListing}
+              onChange={(e) => setHideTargetListing(e.target.checked)}
+            />
+            Hide target listing
+          </label>
+        )}
 
         <div className="resolve-modal-actions">
           <button
             className="btn-admin btn-resolve"
-            onClick={handleSubmit}
+            onClick={() => handleResolve(ABUSE_STATUS.RESOLVED)}
             disabled={isSubmitting}
           >
-            {isSubmitting ? "Đang xử lý..." : "Xác nhận xử lý"}
+            {isSubmitting ? "Processing..." : "✅ Resolve"}
           </button>
-          <button className="btn-admin btn-reject" onClick={onClose}>
-            Hủy
+          <button
+            className="btn-admin btn-reject"
+            onClick={() => handleResolve(ABUSE_STATUS.REJECTED)}
+            disabled={isSubmitting}
+          >
+            ❌ Reject
+          </button>
+          <button className="btn-admin btn-cancel" onClick={onClose}>
+            Cancel
           </button>
         </div>
       </div>
@@ -111,62 +121,67 @@ const ResolveModal: FC<ResolveModalProps> = ({
   );
 };
 
+// ===== Main Page =====
+
+type TabType = "pending" | "resolved";
+
 const AbuseManagementPage: FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [reports, setReports] = useState<AbuseReportDto[]>([]);
+  const [activeTab, setActiveTab] = useState<TabType>("pending");
+  const [pendingRequests, setPendingRequests] = useState<AbuseRequestDto[]>([]);
+  const [resolvedReports, setResolvedReports] = useState<AbuseReportDto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<number | undefined>(
-    ABUSE_STATUS.PENDING,
-  );
-  const [resolvingReport, setResolvingReport] = useState<AbuseReportDto | null>(
-    null,
-  );
+  const [resolvingRequest, setResolvingRequest] = useState<AbuseRequestDto | null>(null);
 
   useEffect(() => {
     if (!user || user.roleName !== "Admin") {
       navigate(ROUTES.HOME);
       return;
     }
-    const fetchReports = async () => {
-      try {
-        setIsLoading(true);
-        const data = await adminService.getAbuseReports(statusFilter);
-        setReports(data);
-      } catch {
-        toast.error("Không thể tải danh sách báo cáo.");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchReports();
-  }, [user, navigate, statusFilter]);
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, navigate]);
 
-  const handleResolved = (reportId: number) => {
-    setResolvingReport(null);
-    setReports((prev) =>
-      prev.map((r) =>
-        r.reportId === reportId ? { ...r, status: ABUSE_STATUS.RESOLVED } : r,
-      ),
-    );
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      const [pending, reports] = await Promise.all([
+        adminService.getPendingAbuse(),
+        adminService.getAbuseReports(),
+      ]);
+      setPendingRequests(pending);
+      setResolvedReports(reports);
+    } catch {
+      toast.error("Failed to load abuse data.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleResolved = () => {
+    setResolvingRequest(null);
+    fetchData(); // Refresh both tabs
   };
 
   const formatDate = (dateStr?: string) => {
     if (!dateStr) return "-";
-    return new Date(dateStr).toLocaleDateString("vi-VN", {
+    return new Date(dateStr).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
   if (isLoading) {
-    return <div className="loading-container">Đang tải...</div>;
+    return <div className="loading-container">Loading...</div>;
   }
 
   return (
     <div className="admin-page">
-      <h2>🚩 Quản lý báo cáo vi phạm</h2>
+      <h2>🚩 Abuse Report Management</h2>
 
       {/* Navigation */}
       <nav className="admin-nav">
@@ -174,109 +189,139 @@ const AbuseManagementPage: FC = () => {
           Dashboard
         </Link>
         <Link to={ROUTES.ADMIN_MODERATION} className="admin-nav-link">
-          Duyệt bài đăng
+          Post Moderation
         </Link>
         <Link to={ROUTES.ADMIN_USERS} className="admin-nav-link">
-          Quản lý người dùng
+          User Management
         </Link>
         <Link to={ROUTES.ADMIN_ABUSE} className="admin-nav-link active">
-          Báo cáo vi phạm
+          Abuse Reports
         </Link>
       </nav>
 
-      {/* Filter */}
+      {/* Tabs */}
       <div className="admin-filter-bar">
-        <label>Trạng thái:</label>
-        <select
-          className="admin-filter-select"
-          title="Lọc theo trạng thái"
-          value={statusFilter ?? ""}
-          onChange={(e) =>
-            setStatusFilter(e.target.value ? Number(e.target.value) : undefined)
-          }
+        <button
+          className={`btn-admin ${activeTab === "pending" ? "btn-resolve" : "btn-edit"}`}
+          onClick={() => setActiveTab("pending")}
         >
-          <option value="">Tất cả</option>
-          <option value={ABUSE_STATUS.PENDING}>Đang chờ</option>
-          <option value={ABUSE_STATUS.RESOLVED}>Đã xử lý</option>
-          <option value={ABUSE_STATUS.REJECTED}>Đã từ chối</option>
-        </select>
+          Pending ({pendingRequests.length})
+        </button>
+        <button
+          className={`btn-admin ${activeTab === "resolved" ? "btn-resolve" : "btn-edit"}`}
+          onClick={() => setActiveTab("resolved")}
+        >
+          Resolved ({resolvedReports.length})
+        </button>
       </div>
 
-      {reports.length === 0 ? (
-        <p className="admin-table-empty">Không có báo cáo nào.</p>
-      ) : (
-        <div className="admin-table-container">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Người báo cáo</th>
-                <th>Người bị báo cáo</th>
-                <th>Lý do</th>
-                <th>Bài đăng</th>
-                <th>Đơn hàng</th>
-                <th>Trạng thái</th>
-                <th>Ngày tạo</th>
-                <th>Thao tác</th>
-              </tr>
-            </thead>
-            <tbody>
-              {reports.map((report) => (
-                <tr key={report.reportId}>
-                  <td>{report.reportId}</td>
-                  <td>{report.reporterName}</td>
-                  <td>{report.reportedUserName}</td>
-                  <td>{report.reason}</td>
-                  <td>
-                    {report.listingId ? (
-                      <Link to={`/bikes/${report.listingId}`}>
-                        {report.listingTitle || `#${report.listingId}`}
-                      </Link>
-                    ) : (
-                      "-"
-                    )}
-                  </td>
-                  <td>
-                    {report.orderId ? (
-                      <Link to={`/orders/${report.orderId}`}>
-                        #{report.orderId}
-                      </Link>
-                    ) : (
-                      "-"
-                    )}
-                  </td>
-                  <td>
-                    <span
-                      className={`abuse-status ${getStatusClass(report.status)}`}
-                    >
-                      {ABUSE_STATUS_LABELS[report.status] || "Không rõ"}
-                    </span>
-                  </td>
-                  <td>{formatDate(report.createdAt)}</td>
-                  <td>
-                    {report.status === ABUSE_STATUS.PENDING ? (
-                      <button
-                        className="btn-admin btn-resolve"
-                        onClick={() => setResolvingReport(report)}
-                      >
-                        🔧 Xử lý
-                      </button>
-                    ) : (
-                      <span>{report.resolution || "-"}</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      {/* Pending Tab */}
+      {activeTab === "pending" && (
+        <>
+          {pendingRequests.length === 0 ? (
+            <p className="admin-table-empty">No pending abuse reports.</p>
+          ) : (
+            <div className="admin-table-container">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Reporter</th>
+                    <th>Reported User</th>
+                    <th>Listing</th>
+                    <th>Reason</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pendingRequests.map((req) => (
+                    <tr key={req.requestAbuseId}>
+                      <td>{req.requestAbuseId}</td>
+                      <td>{req.reporterName}</td>
+                      <td>{req.targetUserName || "-"}</td>
+                      <td>
+                        {req.targetListingId ? (
+                          <Link to={`/bikes/${req.targetListingId}`}>
+                            {req.targetListingTitle || `#${req.targetListingId}`}
+                          </Link>
+                        ) : "-"}
+                      </td>
+                      <td>{req.reason}</td>
+                      <td>{formatDate(req.createdAt)}</td>
+                      <td>
+                        <button
+                          className="btn-admin btn-resolve"
+                          onClick={() => setResolvingRequest(req)}
+                        >
+                          🔧 Process
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Resolved Tab */}
+      {activeTab === "resolved" && (
+        <>
+          {resolvedReports.length === 0 ? (
+            <p className="admin-table-empty">No resolved reports yet.</p>
+          ) : (
+            <div className="admin-table-container">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Reporter</th>
+                    <th>Reported User</th>
+                    <th>Reason</th>
+                    <th>Admin</th>
+                    <th>Resolution</th>
+                    <th>Status</th>
+                    <th>Resolved At</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {resolvedReports.map((report) => (
+                    <tr key={report.reportAbuseId}>
+                      <td>{report.requestAbuseId}</td>
+                      <td>{report.request.reporterName}</td>
+                      <td>{report.request.targetUserName || "-"}</td>
+                      <td>{report.request.reason}</td>
+                      <td>{report.adminName}</td>
+                      <td>{report.resolution || "-"}</td>
+                      <td>
+                        <span
+                          className={`abuse-status ${report.status === ABUSE_STATUS.RESOLVED
+                              ? "resolved"
+                              : report.status === ABUSE_STATUS.REJECTED
+                                ? "rejected"
+                                : "pending"
+                            }`}
+                        >
+                          {ABUSE_STATUS_LABELS[report.status || 1]}
+                        </span>
+                      </td>
+                      <td>{formatDate(report.resolvedAt)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </>
       )}
 
       {/* Resolve Modal */}
-      {resolvingReport && (
+      {resolvingRequest && (
         <ResolveModal
-          report={resolvingReport}
-          onClose={() => setResolvingReport(null)}
+          request={resolvingRequest}
+          onClose={() => setResolvingRequest(null)}
           onResolved={handleResolved}
         />
       )}

@@ -297,8 +297,8 @@ const BikeDetailPage: FC = () => {
           {/* Report abuse — hidden if user is the owner */}
           {(!user || user.userId !== listing.sellerId) && (
             <ReportAbuseButton
-              reportedUserId={listing.sellerId}
-              listingId={listing.listingId}
+              targetUserId={listing.sellerId}
+              targetListingId={listing.listingId}
             />
           )}
 

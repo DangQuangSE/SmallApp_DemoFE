@@ -213,3 +213,15 @@
   background: #fee2e2;
   color: #991b1b;
 }
+
+/* ===== Report Submitted Badge ===== */
+
+.report-submitted {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  color: #065f46;
+  background: #d1fae5;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
