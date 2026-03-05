@@ -50,6 +50,12 @@ const AdminDashboard: FC = () => {
         <Link to={ROUTES.ADMIN_USERS} className="admin-nav-link">
           Quản lý người dùng
         </Link>
+        <Link to={ROUTES.ADMIN_CATEGORIES} className="admin-nav-link">
+          Quản lý danh mục
+        </Link>
+        <Link to={ROUTES.ADMIN_BRANDS} className="admin-nav-link">
+          Quản lý thương hiệu
+        </Link>
         <Link to={ROUTES.ADMIN_ABUSE} className="admin-nav-link">
           Báo cáo vi phạm
         </Link>

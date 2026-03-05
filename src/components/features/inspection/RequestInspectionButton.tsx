@@ -17,7 +17,7 @@ const RequestInspectionButton: FC<RequestInspectionButtonProps> = ({
   const [isLoading, setIsLoading] = useState(false);
 
   if (hasInspection) {
-    return <span className="badge-inspected">✅ Đã kiểm định</span>;
+    return <span className="badge-inspected" title="Đang chờ kiểm tra">⏳ Đã yêu cầu kiểm định</span>;
   }
 
   const handleRequest = async () => {

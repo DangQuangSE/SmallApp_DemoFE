@@ -118,6 +118,14 @@ const UserDropdown = () => {
           {displayUser.roleName === "Seller" && (
             <>
               <Link
+                to={ROUTES.SELLER_DASHBOARD}
+                className="menu-item"
+                onClick={() => setIsOpen(false)}
+              >
+                <span className="menu-icon">📊</span>
+                <span>Seller Dashboard</span>
+              </Link>
+              <Link
                 to={ROUTES.SELLER_LISTINGS}
                 className="menu-item"
                 onClick={() => setIsOpen(false)}
@@ -141,11 +149,27 @@ const UserDropdown = () => {
                 <span className="menu-icon">🔍</span>
                 <span>Yêu cầu kiểm định</span>
               </Link>
+              <Link
+                to={ROUTES.SELLER_ORDERS}
+                className="menu-item"
+                onClick={() => setIsOpen(false)}
+              >
+                <span className="menu-icon">📦</span>
+                <span>Đơn hàng bán ra</span>
+              </Link>
             </>
           )}
 
           {displayUser.roleName === "Inspector" && (
             <>
+              <Link
+                to={ROUTES.INSPECTOR_DASHBOARD}
+                className="menu-item"
+                onClick={() => setIsOpen(false)}
+              >
+                <span className="menu-icon">📊</span>
+                <span>Inspector Dashboard</span>
+              </Link>
               <Link
                 to={ROUTES.INSPECTOR_PENDING}
                 className="menu-item"

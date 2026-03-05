@@ -302,8 +302,8 @@ const BikeDetailPage: FC = () => {
             />
           )}
 
-          {/* Buy Now */}
-          {listing.listingStatus === 1 && (
+          {/* Buy Now — only for Buyer role */}
+          {listing.listingStatus === 1 && user?.roleName === "Buyer" && (
             <button
               className="btn-buy-now"
               onClick={handleBuyNow}

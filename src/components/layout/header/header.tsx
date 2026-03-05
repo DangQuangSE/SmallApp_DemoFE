@@ -8,6 +8,7 @@ import {
   faHouse,
   faStore,
   faSuitcase,
+  faGaugeHigh,
 } from "@fortawesome/free-solid-svg-icons";
 import { ROUTES } from "../../../constants/routes";
 import { cartService } from "../../../services/cart.service";
@@ -19,7 +20,7 @@ import "./header.css";
 import { useAuth } from "../../../contexts/AuthContext";
 
 const Header = () => {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [cartCount, setCartCount] = useState(0);
   const [unreadCount, setUnreadCount] = useState(0);
 
@@ -99,6 +100,37 @@ const Header = () => {
               <FontAwesomeIcon icon={faComment} className="icon" />
               {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
             </Link>
+            {/* Role Dashboard Shortcut */}
+            {isAuthenticated && user?.roleName === "Admin" && (
+              <Link
+                to={ROUTES.ADMIN_DASHBOARD}
+                className="role-dashboard-btn admin-role"
+                data-tooltip="Admin Dashboard"
+              >
+                <FontAwesomeIcon icon={faGaugeHigh} className="icon" />
+                <span className="role-btn-label">Admin</span>
+              </Link>
+            )}
+            {isAuthenticated && user?.roleName === "Seller" && (
+              <Link
+                to={ROUTES.SELLER_DASHBOARD}
+                className="role-dashboard-btn seller-role"
+                data-tooltip="Seller Dashboard"
+              >
+                <FontAwesomeIcon icon={faGaugeHigh} className="icon" />
+                <span className="role-btn-label">Seller</span>
+              </Link>
+            )}
+            {isAuthenticated && user?.roleName === "Inspector" && (
+              <Link
+                to={ROUTES.INSPECTOR_DASHBOARD}
+                className="role-dashboard-btn inspector-role"
+                data-tooltip="Inspector Dashboard"
+              >
+                <FontAwesomeIcon icon={faGaugeHigh} className="icon" />
+                <span className="role-btn-label">Inspector</span>
+              </Link>
+            )}
             {/* Avatar & Dropdown */}
             {isAuthenticated ? (
               <UserDropdown />

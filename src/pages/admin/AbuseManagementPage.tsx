@@ -189,13 +189,19 @@ const AbuseManagementPage: FC = () => {
           Dashboard
         </Link>
         <Link to={ROUTES.ADMIN_MODERATION} className="admin-nav-link">
-          Post Moderation
+          Duyệt bài đăng
         </Link>
         <Link to={ROUTES.ADMIN_USERS} className="admin-nav-link">
-          User Management
+          Quản lý người dùng
+        </Link>
+        <Link to={ROUTES.ADMIN_CATEGORIES} className="admin-nav-link">
+          Quản lý danh mục
+        </Link>
+        <Link to={ROUTES.ADMIN_BRANDS} className="admin-nav-link">
+          Quản lý thương hiệu
         </Link>
         <Link to={ROUTES.ADMIN_ABUSE} className="admin-nav-link active">
-          Abuse Reports
+          Báo cáo vi phạm
         </Link>
       </nav>
 
@@ -298,10 +304,10 @@ const AbuseManagementPage: FC = () => {
                       <td>
                         <span
                           className={`abuse-status ${report.status === ABUSE_STATUS.RESOLVED
-                              ? "resolved"
-                              : report.status === ABUSE_STATUS.REJECTED
-                                ? "rejected"
-                                : "pending"
+                            ? "resolved"
+                            : report.status === ABUSE_STATUS.REJECTED
+                              ? "rejected"
+                              : "pending"
                             }`}
                         >
                           {ABUSE_STATUS_LABELS[report.status || 1]}

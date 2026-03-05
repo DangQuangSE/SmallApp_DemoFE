@@ -20,10 +20,12 @@
   column-gap: 50px;
   align-items: center;
 }
+
 /* ===== LOGO ===== */
 .logo img {
   height: 70px;
 }
+
 /* ===== SPACER (Đẩy nav sang phải) ===== */
 .spacer {
   flex: 1;
@@ -218,6 +220,7 @@
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -336,4 +339,76 @@
 
 .login-btn:hover {
   background-color: #a01828;
+}
+
+/* ===== ROLE DASHBOARD BUTTON ===== */
+.role-dashboard-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.role-dashboard-btn .icon {
+  font-size: 1rem;
+}
+
+.role-btn-label {
+  font-size: 0.8rem;
+}
+
+/* Admin — Red */
+.role-dashboard-btn.admin-role {
+  background: linear-gradient(135deg, #c41e3a, #a01828);
+  color: white;
+  box-shadow: 0 2px 6px rgba(196, 30, 58, 0.25);
+}
+
+.role-dashboard-btn.admin-role:hover {
+  background: linear-gradient(135deg, #a01828, #7d1220);
+  box-shadow: 0 4px 12px rgba(196, 30, 58, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Seller — Blue */
+.role-dashboard-btn.seller-role {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.25);
+}
+
+.role-dashboard-btn.seller-role:hover {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Inspector — Emerald */
+.role-dashboard-btn.inspector-role {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+}
+
+.role-dashboard-btn.inspector-role:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Responsive: hide label on small screens */
+@media (max-width: 768px) {
+  .role-btn-label {
+    display: none;
+  }
+
+  .role-dashboard-btn {
+    padding: 0.4rem 0.6rem;
+  }
 }
