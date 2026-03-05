@@ -28,6 +28,8 @@ const CreatePostPage: FC = () => {
   const { isAuthenticated } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [brands, setBrands] = useState<string[]>([]);
+  const [types, setTypes] = useState<string[]>([]);
 
   const {
     register,
@@ -41,6 +43,9 @@ const CreatePostPage: FC = () => {
     if (!isAuthenticated) {
       navigate(ROUTES.LOGIN);
     }
+    // Load brands and categories for dropdowns (public endpoints)
+    bikeService.getBrands().then(setBrands).catch(() => { });
+    bikeService.getTypes().then(setTypes).catch(() => { });
   }, [isAuthenticated, navigate]);
 
   const onSubmit = async (data: CreateBikeFormData) => {
@@ -215,27 +220,37 @@ const CreatePostPage: FC = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="create-brandId">Brand ID</label>
-              <input
+              <label htmlFor="create-brandId">Thương hiệu</label>
+              <select
                 id="create-brandId"
-                type="number"
                 className="form-control"
-                placeholder="VD: 1"
-                min={1}
+                title="Chọn thương hiệu"
                 {...register("brandId")}
-              />
+              >
+                <option value="">Chọn thương hiệu</option>
+                {brands.map((name, i) => (
+                  <option key={name} value={i + 1}>
+                    {name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="form-group">
-              <label htmlFor="create-typeId">Type ID</label>
-              <input
+              <label htmlFor="create-typeId">Loại xe</label>
+              <select
                 id="create-typeId"
-                type="number"
                 className="form-control"
-                placeholder="VD: 1"
-                min={1}
+                title="Chọn loại xe"
                 {...register("typeId")}
-              />
+              >
+                <option value="">Chọn loại xe</option>
+                {types.map((name, i) => (
+                  <option key={name} value={i + 1}>
+                    {name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="form-group">

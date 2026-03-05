@@ -40,6 +40,8 @@ const EditPostPage: FC = () => {
   const [thumbnailMediaId, setThumbnailMediaId] = useState<
     number | undefined
   >();
+  const [brands, setBrands] = useState<string[]>([]);
+  const [types, setTypes] = useState<string[]>([]);
 
   const {
     register,
@@ -55,6 +57,9 @@ const EditPostPage: FC = () => {
       navigate(ROUTES.LOGIN);
       return;
     }
+    // Load brands and categories for dropdowns (public endpoints)
+    bikeService.getBrands().then(setBrands).catch(() => { });
+    bikeService.getTypes().then(setTypes).catch(() => { });
   }, [isAuthenticated, navigate]);
 
   useEffect(() => {
@@ -266,25 +271,37 @@ const EditPostPage: FC = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="edit-brandId">Brand ID</label>
-              <input
+              <label htmlFor="edit-brandId">Thương hiệu</label>
+              <select
                 id="edit-brandId"
-                type="number"
                 className="form-control"
-                min={1}
+                title="Chọn thương hiệu"
                 {...register("brandId")}
-              />
+              >
+                <option value="">Chọn thương hiệu</option>
+                {brands.map((name, i) => (
+                  <option key={name} value={i + 1}>
+                    {name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="form-group">
-              <label htmlFor="edit-typeId">Type ID</label>
-              <input
+              <label htmlFor="edit-typeId">Loại xe</label>
+              <select
                 id="edit-typeId"
-                type="number"
                 className="form-control"
-                min={1}
+                title="Chọn loại xe"
                 {...register("typeId")}
-              />
+              >
+                <option value="">Chọn loại xe</option>
+                {types.map((name, i) => (
+                  <option key={name} value={i + 1}>
+                    {name}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div className="form-group">

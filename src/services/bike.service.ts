@@ -74,8 +74,8 @@ export const bikeService = {
     // Remove undefined/null/empty params
     const params = filters
       ? Object.fromEntries(
-          Object.entries(filters).filter(([, v]) => v != null && v !== ""),
-        )
+        Object.entries(filters).filter(([, v]) => v != null && v !== ""),
+      )
       : undefined;
     const response = await axiosInstance.get(API_ENDPOINTS.BIKES.LIST, {
       params,
@@ -104,10 +104,11 @@ export const bikeService = {
   /** Create bike listing (auth) — uses FormData, NOT JSON */
   createBike: async (values: CreateBikeFormValues): Promise<BikePostDto> => {
     const formData = buildCreateFormData(values);
-    // Do NOT set Content-Type header — let browser add multipart boundary
+    // Delete default Content-Type so browser sets multipart/form-data with boundary
     const response = await axiosInstance.post(
       API_ENDPOINTS.BIKES.CREATE,
       formData,
+      { headers: { "Content-Type": undefined } },
     );
     return response.data;
   },
@@ -115,9 +116,11 @@ export const bikeService = {
   /** Update bike listing (auth) — uses FormData, NOT JSON */
   updateBike: async (values: UpdateBikeFormValues): Promise<BikePostDto> => {
     const formData = buildUpdateFormData(values);
+    // Delete default Content-Type so browser sets multipart/form-data with boundary
     const response = await axiosInstance.put(
       API_ENDPOINTS.BIKES.UPDATE,
       formData,
+      { headers: { "Content-Type": undefined } },
     );
     return response.data;
   },

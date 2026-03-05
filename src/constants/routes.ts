@@ -36,6 +36,8 @@ export const ROUTES = {
   // Admin routes
   ADMIN_DASHBOARD: "/admin/dashboard",
   ADMIN_USERS: "/admin/users",
+  ADMIN_CATEGORIES: "/admin/categories",
+  ADMIN_BRANDS: "/admin/brands",
   ADMIN_LISTINGS: "/admin/listings",
   ADMIN_MODERATION: "/admin/moderation",
   ADMIN_ABUSE: "/admin/abuse",

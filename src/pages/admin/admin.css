@@ -404,4 +404,216 @@
     padding: 0.375rem 0.75rem;
     font-size: 0.8rem;
   }
+
+  .modal-content {
+    margin: 1rem;
+    max-height: 90vh;
+  }
 }
+
+/* ===== CRUD Modal ===== */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 520px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.modal-content h3 {
+  margin: 0 0 1rem;
+  font-size: 1.125rem;
+  color: #1f2937;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.modal-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.modal-form input,
+.modal-form select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  background: white;
+}
+
+.modal-form input:focus,
+.modal-form select:focus {
+  outline: none;
+  border-color: #c41e3a;
+  box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.1);
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+/* ===== Additional Admin Buttons ===== */
+
+.btn-create {
+  background: #c41e3a;
+  color: white;
+}
+
+.btn-create:hover:not(:disabled) {
+  background: #a3182f;
+}
+
+.btn-edit {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.btn-edit:hover:not(:disabled) {
+  background: #e5e7eb;
+}
+
+.btn-delete {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.btn-delete:hover:not(:disabled) {
+  background: #fee2e2;
+}
+
+.btn-reset-pw {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.btn-reset-pw:hover:not(:disabled) {
+  background: #dbeafe;
+}
+
+.btn-save {
+  background: #10b981;
+  color: white;
+}
+
+.btn-save:hover:not(:disabled) {
+  background: #059669;
+}
+
+.btn-cancel {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background: #e5e7eb;
+}
+
+/* ===== Admin Actions Cell ===== */
+
+.admin-actions {
+  display: flex;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+
+/* ===== Search Input ===== */
+
+.admin-search-input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  min-width: 200px;
+  background: white;
+}
+
+.admin-search-input:focus {
+  outline: none;
+  border-color: #c41e3a;
+  box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.1);
+}
+
+/* ===== Pagination ===== */
+
+.admin-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.admin-pagination button {
+  padding: 0.375rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background: white;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.admin-pagination button:hover:not(:disabled) {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.admin-pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ===== Additional Status Badges ===== */
+
+.user-status-badge.suspended {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.user-status-badge.unverified {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+/* ===== Loading ===== */
+
+.loading-container {
+  text-align: center;
+  padding: 3rem;
+  color: #6b7280;
+  font-size: 1rem;
+}
+

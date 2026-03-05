@@ -66,7 +66,7 @@ const ImagePicker: FC<ImagePickerProps> = ({ files, onAdd, onRemove }) => {
     <div className="image-picker">
       <div className="image-picker-grid">
         {files.map((file, i) => (
-          <div key={`${file.name}-${file.size}`} className="image-picker-item">
+          <div key={`${i}-${file.name}-${file.size}`} className="image-picker-item">
             <img src={previewUrls[i]} alt={`Preview ${i + 1}`} />
             {i === 0 && <span className="image-picker-badge">Ảnh bìa</span>}
             <button

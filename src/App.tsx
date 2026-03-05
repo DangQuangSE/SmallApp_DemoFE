@@ -10,10 +10,12 @@ import Register from "./pages/auth/Register";
 import VerifyEmail from "./pages/auth/VerifyEmail";
 import BikeList from "./pages/bikes/BikeList";
 import BikeDetailPage from "./pages/bikes/BikeDetailPage";
+import SellerDashboard from "./pages/seller/SellerDashboard";
 import MyPostsPage from "./pages/seller/MyPostsPage";
 import CreatePostPage from "./pages/seller/CreatePostPage";
 import EditPostPage from "./pages/seller/EditPostPage";
 import MyInspectionRequestsPage from "./pages/seller/MyInspectionRequestsPage";
+import SellerOrdersPage from "./pages/seller/SellerOrdersPage";
 import WishlistPage from "./pages/wishlist/WishlistPage";
 import CartPage from "./pages/cart/CartPage";
 import MyOrdersPage from "./pages/orders/MyOrdersPage";
@@ -28,6 +30,9 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import PostModerationPage from "./pages/admin/PostModerationPage";
 import UserManagementPage from "./pages/admin/UserManagementPage";
 import AbuseManagementPage from "./pages/admin/AbuseManagementPage";
+import CategoryManagementPage from "./pages/admin/CategoryManagementPage";
+import BrandManagementPage from "./pages/admin/BrandManagementPage";
+import InspectorDashboard from "./pages/inspector/InspectorDashboard";
 import PendingInspectionsPage from "./pages/inspector/PendingInspectionsPage";
 import AssignedInspectionsPage from "./pages/inspector/AssignedInspectionsPage";
 import UploadReportPage from "./pages/inspector/UploadReportPage";
@@ -148,6 +153,10 @@ function App() {
 
                   {/* Seller Routes */}
                   <Route
+                    path={ROUTES.SELLER_DASHBOARD}
+                    element={<SellerDashboard />}
+                  />
+                  <Route
                     path={ROUTES.SELLER_LISTINGS}
                     element={<MyPostsPage />}
                   />
@@ -160,8 +169,16 @@ function App() {
                     path={ROUTES.SELLER_INSPECTIONS}
                     element={<MyInspectionRequestsPage />}
                   />
+                  <Route
+                    path={ROUTES.SELLER_ORDERS}
+                    element={<SellerOrdersPage />}
+                  />
 
                   {/* Inspector Routes */}
+                  <Route
+                    path={ROUTES.INSPECTOR_DASHBOARD}
+                    element={<InspectorDashboard />}
+                  />
                   <Route
                     path={ROUTES.INSPECTOR_PENDING}
                     element={<PendingInspectionsPage />}
@@ -219,6 +236,14 @@ function App() {
                   <Route
                     path={ROUTES.ADMIN_USERS}
                     element={<UserManagementPage />}
+                  />
+                  <Route
+                    path={ROUTES.ADMIN_CATEGORIES}
+                    element={<CategoryManagementPage />}
+                  />
+                  <Route
+                    path={ROUTES.ADMIN_BRANDS}
+                    element={<BrandManagementPage />}
                   />
                   <Route
                     path={ROUTES.ADMIN_ABUSE}

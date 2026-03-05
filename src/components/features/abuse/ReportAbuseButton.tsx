@@ -6,60 +6,65 @@ import type { CreateAbuseRequestDto } from "../../../types/abuse.types";
 import "./abuse.css";
 
 interface ReportAbuseButtonProps {
-  reportedUserId: number;
-  listingId?: number;
-  orderId?: number;
+  targetUserId: number;
+  targetListingId?: number;
 }
 
 const ABUSE_REASONS = [
-  "Hàng giả / Hàng nhái",
-  "Lừa đảo",
-  "Giá không hợp lý",
-  "Mô tả sai sự thật",
-  "Spam / Quấy rối",
-  "Khác",
+  "Counterfeit / Fake product",
+  "Scam / Fraud",
+  "Unreasonable price",
+  "False description",
+  "Spam / Harassment",
+  "Other",
 ];
 
 const ReportAbuseButton: FC<ReportAbuseButtonProps> = ({
-  reportedUserId,
-  listingId,
-  orderId,
+  targetUserId,
+  targetListingId,
 }) => {
   const { isAuthenticated } = useAuth();
   const [showForm, setShowForm] = useState(false);
   const [reason, setReason] = useState("");
-  const [description, setDescription] = useState("");
+  const [customReason, setCustomReason] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   if (!isAuthenticated) return null;
+  if (submitted) {
+    return (
+      <div className="report-abuse">
+        <span className="report-submitted">✅ Report submitted</span>
+      </div>
+    );
+  }
 
   const handleSubmit = async () => {
-    if (!reason.trim()) {
-      toast.error("Vui lòng chọn lý do.");
-      return;
-    }
-    if (!description.trim()) {
-      toast.error("Vui lòng mô tả chi tiết.");
+    const finalReason = reason === "Other" ? customReason.trim() : reason;
+    if (!finalReason) {
+      toast.error("Please select or enter a reason.");
       return;
     }
 
     setIsSubmitting(true);
     try {
       const data: CreateAbuseRequestDto = {
-        reportedUserId,
-        reason,
-        description,
+        targetUserId,
+        reason: finalReason,
       };
-      if (listingId) data.listingId = listingId;
-      if (orderId) data.orderId = orderId;
+      if (targetListingId) data.targetListingId = targetListingId;
 
       await abuseService.submit(data);
-      toast.success("Báo cáo đã được gửi thành công!");
+      toast.success("Report submitted successfully!");
+      setSubmitted(true);
       setShowForm(false);
       setReason("");
-      setDescription("");
-    } catch {
-      toast.error("Gửi báo cáo thất bại. Vui lòng thử lại.");
+      setCustomReason("");
+    } catch (err: unknown) {
+      const message =
+        (err as { response?: { data?: string } })?.response?.data ||
+        "Failed to submit report. Please try again.";
+      toast.error(String(message));
     } finally {
       setIsSubmitting(false);
     }
@@ -69,20 +74,20 @@ const ReportAbuseButton: FC<ReportAbuseButtonProps> = ({
     <div className="report-abuse">
       {!showForm ? (
         <button className="btn-report-abuse" onClick={() => setShowForm(true)}>
-          🚩 Báo cáo vi phạm
+          🚩 Report Abuse
         </button>
       ) : (
         <div className="report-abuse-form">
-          <h4>Báo cáo vi phạm</h4>
+          <h4>Report Abuse</h4>
 
-          <label className="report-label">Lý do:</label>
+          <label className="report-label">Reason:</label>
           <select
             className="report-select"
-            title="Chọn lý do vi phạm"
+            title="Select abuse reason"
             value={reason}
             onChange={(e) => setReason(e.target.value)}
           >
-            <option value="">-- Chọn lý do --</option>
+            <option value="">-- Select reason --</option>
             {ABUSE_REASONS.map((r) => (
               <option key={r} value={r}>
                 {r}
@@ -90,14 +95,19 @@ const ReportAbuseButton: FC<ReportAbuseButtonProps> = ({
             ))}
           </select>
 
-          <label className="report-label">Mô tả chi tiết:</label>
-          <textarea
-            className="report-textarea"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Mô tả chi tiết vi phạm..."
-            rows={4}
-          />
+          {reason === "Other" && (
+            <>
+              <label className="report-label">Describe the issue:</label>
+              <textarea
+                className="report-textarea"
+                value={customReason}
+                onChange={(e) => setCustomReason(e.target.value)}
+                placeholder="Describe the violation..."
+                rows={3}
+                maxLength={1000}
+              />
+            </>
+          )}
 
           <div className="report-actions">
             <button
@@ -105,17 +115,17 @@ const ReportAbuseButton: FC<ReportAbuseButtonProps> = ({
               onClick={handleSubmit}
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Đang gửi..." : "Gửi báo cáo"}
+              {isSubmitting ? "Submitting..." : "Submit Report"}
             </button>
             <button
               className="btn-cancel-report"
               onClick={() => {
                 setShowForm(false);
                 setReason("");
-                setDescription("");
+                setCustomReason("");
               }}
             >
-              Hủy
+              Cancel
             </button>
           </div>
         </div>
