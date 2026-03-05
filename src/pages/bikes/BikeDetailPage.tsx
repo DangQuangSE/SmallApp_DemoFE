@@ -170,36 +170,115 @@ const BikeDetailPage: FC = () => {
         ← Quay lại
       </button>
 
-      <div className="bike-detail-grid">
-        {/* Left — Gallery */}
-        <div>
+      {/* Top Section: Gallery + Critical Purchase Info */}
+      <div className="bike-detail-top">
+        {/* Left: Gallery */}
+        <div className="bike-detail-gallery-wrapper">
           <BikeImageGallery images={listing.images} />
         </div>
 
-        {/* Right — Info */}
-        <div className="bike-detail-info">
-          <h1>{listing.title}</h1>
-          <p className="bike-detail-price">{formatPrice(listing.price)}</p>
+        {/* Right: Purchase Box */}
+        <div className="bike-detail-purchase-box">
+          <h1 className="bike-title">{listing.title}</h1>
+          <p className="bike-price">{formatPrice(listing.price)}</p>
 
-          <div className="bike-detail-meta">
+          <div className="bike-badges">
             {listing.condition && (
-              <span className="bike-detail-meta-item">{listing.condition}</span>
+              <span className="badge-item">{listing.condition}</span>
             )}
             {listing.brandName && (
-              <span className="bike-detail-meta-item">{listing.brandName}</span>
+              <span className="badge-item">{listing.brandName}</span>
             )}
             {listing.typeName && (
-              <span className="bike-detail-meta-item">{listing.typeName}</span>
+              <span className="badge-item">{listing.typeName}</span>
             )}
             {listing.listingStatus != null && (
               <StatusBadge status={listing.listingStatus} />
             )}
+            {/* Inspection badge right up top near badges */}
+            {listing.hasInspection && (
+              <InspectionBadge listingId={listing.listingId} />
+            )}
           </div>
 
-          {/* Specs */}
-          <div className="bike-detail-section">
+          <div className="bike-stock">
+            {listing.quantity != null && (
+              <span>
+                {listing.quantity > 0
+                  ? `Tình trạng: Còn ${listing.quantity} chiếc`
+                  : "Tình trạng: Hết hàng"}
+              </span>
+            )}
+          </div>
+
+          <div className="action-buttons-container">
+            {/* Buy Now — only for Buyer role */}
+            {listing.listingStatus === 1 && user?.roleName === "Buyer" && (
+              <button
+                className="btn-buy-now"
+                onClick={handleBuyNow}
+                disabled={isBuying || listing.quantity === 0}
+              >
+                {isBuying ? "Đang xử lý..." : "🛒 Mua ngay"}
+              </button>
+            )}
+
+            {/* Wishlist & Cart — hidden if user is the owner */}
+            {(!user || user.userId !== listing.sellerId) && (
+              <div className="cart-wishlist-group">
+                <button
+                  className={`btn-wishlist ${isInWishlist ? "active" : ""}`}
+                  onClick={handleToggleWishlist}
+                >
+                  {isInWishlist ? "❤️ Đã yêu thích" : "🤍 Thêm yêu thích"}
+                </button>
+
+                {isInCart ? (
+                  <button
+                    className="btn-cart-toggle in-cart"
+                    onClick={handleToggleCart}
+                  >
+                    ✅ Đã thêm — Bỏ ra
+                  </button>
+                ) : (
+                  <button
+                    className="btn-cart-toggle"
+                    onClick={handleToggleCart}
+                    disabled={listing.quantity === 0}
+                  >
+                    🛒 Thêm vào giỏ
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Chat with seller — hidden if user is the owner */}
+            {(!user || user.userId !== listing.sellerId) && (
+              <button className="btn-chat-seller" onClick={handleChat}>
+                💬 Chat với người bán
+              </button>
+            )}
+
+            {/* Report abuse — hidden if user is the owner */}
+            {(!user || user.userId !== listing.sellerId) && (
+              <div style={{ marginTop: "12px", textAlign: "center" }}>
+                <ReportAbuseButton
+                  targetUserId={listing.sellerId}
+                  targetListingId={listing.listingId}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Section: Details, Description, Seller Sidebar */}
+      <div className="bike-detail-bottom">
+        <div className="bike-detail-main-content">
+          {/* Detailed Specs */}
+          <div className="detail-section">
             <h3>Thông số kỹ thuật</h3>
-            <div className="bike-detail-specs">
+            <div className="specs-grid">
               {listing.modelName && (
                 <div className="spec-item">
                   <span className="spec-label">Model</span>
@@ -259,102 +338,32 @@ const BikeDetailPage: FC = () => {
 
           {/* Description */}
           {listing.description && (
-            <div className="bike-detail-section">
-              <h3>Mô tả</h3>
-              <p className="bike-detail-description">{listing.description}</p>
+            <div className="detail-section">
+              <h3>Mô tả chi tiết</h3>
+              <p className="description-text">{listing.description}</p>
             </div>
           )}
+        </div>
 
-          {/* Seller */}
-          <div className="bike-detail-section">
-            <h3>Người bán</h3>
+        {/* Sidebar */}
+        <div className="bike-detail-sidebar">
+          {/* Seller Info */}
+          <div className="seller-sidebar-card">
+            <h3>Thông tin người bán</h3>
             <div className="bike-detail-seller">
               <div className="seller-avatar">
                 {listing.sellerName?.charAt(0).toUpperCase()}
               </div>
               <div className="seller-info">
                 <div className="seller-name">{listing.sellerName}</div>
-                {listing.address && (
-                  <div className="seller-date">📍 {listing.address}</div>
-                )}
-                <div className="seller-date">
-                  Đăng ngày: {formatDate(listing.postedDate)}
+                <div className="seller-meta">
+                  {listing.address && <span>📍 {listing.address}</span>}
+                  <span>📅 Đăng: {formatDate(listing.postedDate)}</span>
                 </div>
               </div>
             </div>
+            <SellerReputation sellerId={listing.sellerId} />
           </div>
-
-          {/* Seller Reputation */}
-          <SellerReputation sellerId={listing.sellerId} />
-
-          {/* Chat with seller — hidden if user is the owner */}
-          {(!user || user.userId !== listing.sellerId) && (
-            <button className="btn-chat-seller" onClick={handleChat}>
-              💬 Chat với người bán
-            </button>
-          )}
-
-          {/* Report abuse — hidden if user is the owner */}
-          {(!user || user.userId !== listing.sellerId) && (
-            <ReportAbuseButton
-              targetUserId={listing.sellerId}
-              targetListingId={listing.listingId}
-            />
-          )}
-
-          {/* Buy Now — only for Buyer role */}
-          {listing.listingStatus === 1 && user?.roleName === "Buyer" && (
-            <button
-              className="btn-buy-now"
-              onClick={handleBuyNow}
-              disabled={isBuying}
-            >
-              {isBuying ? "Đang xử lý..." : "🛒 Mua ngay"}
-            </button>
-          )}
-
-          {/* Wishlist & Cart — hidden if user is the owner */}
-          {(!user || user.userId !== listing.sellerId) && (
-            <div className="bike-detail-actions">
-              <button
-                className={`btn-wishlist ${isInWishlist ? "active" : ""}`}
-                onClick={handleToggleWishlist}
-              >
-                {isInWishlist ? "❤️ Đã yêu thích" : "🤍 Yêu thích"}
-              </button>
-
-              {isInCart ? (
-                <button
-                  className="btn-cart-toggle in-cart"
-                  onClick={handleToggleCart}
-                >
-                  ✅ Đã trong giỏ — Bỏ ra
-                </button>
-              ) : (
-                <button
-                  className="btn-cart-toggle"
-                  onClick={handleToggleCart}
-                  disabled={listing.quantity === 0}
-                >
-                  🛒 Thêm vào giỏ
-                </button>
-              )}
-            </div>
-          )}
-
-          {/* Quantity */}
-          {listing.quantity != null && (
-            <p className="bike-detail-quantity">
-              {listing.quantity > 0
-                ? `Còn ${listing.quantity} chiếc`
-                : "Hết hàng"}
-            </p>
-          )}
-
-          {/* Inspection badge — expandable report */}
-          {listing.hasInspection && (
-            <InspectionBadge listingId={listing.listingId} />
-          )}
         </div>
       </div>
     </div>

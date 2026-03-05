@@ -12,29 +12,25 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { ROUTES } from "../../../constants/routes";
 import { cartService } from "../../../services/cart.service";
-import { chatService } from "../../../services/chat.service";
 import UserDropdown from "./userDropdown";
 import logoImage from "../../../assets/images/Logo.png";
 import "./header.css";
 
 import { useAuth } from "../../../contexts/AuthContext";
+import { useChat } from "../../../contexts/ChatContext";
 
 const Header = () => {
   const { isAuthenticated, user } = useAuth();
+  const { totalUnread } = useChat();
   const [cartCount, setCartCount] = useState(0);
-  const [unreadCount, setUnreadCount] = useState(0);
 
-  // Fetch cart count & unread messages when authenticated
+  // Fetch cart count when authenticated
   useEffect(() => {
     if (!isAuthenticated) return;
     cartService
       .getCount()
       .then(setCartCount)
       .catch(() => setCartCount(0));
-    chatService
-      .getUnreadCount()
-      .then(setUnreadCount)
-      .catch(() => setUnreadCount(0));
   }, [isAuthenticated]);
 
   return (
@@ -98,7 +94,7 @@ const Header = () => {
               data-tooltip="Tin nhắn"
             >
               <FontAwesomeIcon icon={faComment} className="icon" />
-              {unreadCount > 0 && <span className="badge">{unreadCount}</span>}
+              {totalUnread > 0 && <span className="badge">{totalUnread}</span>}
             </Link>
             {/* Role Dashboard Shortcut */}
             {isAuthenticated && user?.roleName === "Admin" && (
