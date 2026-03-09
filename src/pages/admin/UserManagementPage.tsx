@@ -25,9 +25,11 @@ const STATUS_OPTIONS = [
   { label: "Suspended", value: 2 },
   { label: "Banned", value: 3 },
   { label: "Unverified", value: 4 },
+  { label: "Deleted", value: 0 },
 ];
 
 const STATUS_BADGE_CLASS: Record<number, string> = {
+  0: "deleted",
   1: "active",
   2: "suspended",
   3: "banned",
@@ -131,15 +133,36 @@ const UserManagementPage: FC = () => {
 
   // Delete
   const handleDelete = async (userId: number) => {
-    if (!window.confirm("Bạn có chắc chắn muốn xóa người dùng này?")) return;
+    if (!window.confirm("Bạn có chắc muốn vô hiệu hóa user này?\nUser sẽ bị đánh dấu là đã xóa và không thể đăng nhập.\nDữ liệu user vẫn được lưu trong hệ thống.")) return;
     try {
       await userManagerService.delete(userId);
-      toast.success("Đã xóa người dùng!");
+      toast.success("Đã vô hiệu hóa người dùng!");
       fetchUsers();
     } catch (err) {
       toast.error(
-        err instanceof Error ? err.message : "Xóa thất bại.",
+        err instanceof Error ? err.message : "Vô hiệu hóa thất bại.",
       );
+    }
+  };
+
+  // Restore
+  const handleRestore = async (u: UserManagementDto) => {
+    if (!window.confirm("Bạn có muốn khôi phục người dùng này?")) return;
+    setProcessing(true);
+    try {
+      await userManagerService.update({
+        userId: u.userId,
+        status: 1,
+        isVerified: u.isVerified,
+      });
+      toast.success("Đã khôi phục người dùng!");
+      fetchUsers();
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Khôi phục thất bại."
+      );
+    } finally {
+      setProcessing(false);
     }
   };
 
@@ -337,13 +360,24 @@ const UserManagementPage: FC = () => {
                       >
                         🔑
                       </button>
-                      <button
-                        className="btn-admin btn-delete"
-                        onClick={() => handleDelete(u.userId)}
-                        title="Xóa"
-                      >
-                        🗑️
-                      </button>
+                      {u.status !== 0 && (
+                        <button
+                          className="btn-admin btn-delete"
+                          onClick={() => handleDelete(u.userId)}
+                          title="Vô hiệu hóa"
+                        >
+                          🗑️
+                        </button>
+                      )}
+                      {u.status === 0 && (
+                        <button
+                          className="btn-admin btn-restore"
+                          onClick={() => handleRestore(u)}
+                          title="Khôi phục"
+                        >
+                          🔄
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
