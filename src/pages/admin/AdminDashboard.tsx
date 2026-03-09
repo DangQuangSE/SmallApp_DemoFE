@@ -67,7 +67,11 @@ const AdminDashboard: FC = () => {
           <div className="stat-card">
             <div className="stat-icon">👥</div>
             <div className="stat-value">{stats.totalUsers}</div>
-            <div className="stat-label">Tổng người dùng</div>
+            <div className="stat-label">
+              Tổng người dùng
+              <br />
+              <span style={{ fontSize: "0.75rem", opacity: 0.8 }}>(Bao gồm đã xóa)</span>
+            </div>
           </div>
           <div className="stat-card">
             <div className="stat-icon">🚲</div>
